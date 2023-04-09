@@ -9,7 +9,7 @@
 #define SKIP_HOOK3 0x00000002l
 
 typedef struct HOOKLISTDATA { char function_name[32]; PROC new_function; PROC* function; DWORD flags; } HOOKLISTDATA;
-typedef struct HOOKLIST { char module_name[32]; HOOKLISTDATA data[24]; } HOOKLIST;
+typedef struct HOOKLIST { char module_name[32]; HOOKLISTDATA data[25]; } HOOKLIST;
 
 typedef BOOL(WINAPI* GETCURSORPOSPROC)(LPPOINT);
 typedef BOOL(WINAPI* CLIPCURSORPROC)(const RECT*);
@@ -34,6 +34,7 @@ typedef HWND(WINAPI* CREATEWINDOWEXAPROC)(DWORD, LPCSTR, LPCSTR, DWORD, int, int
 typedef BOOL(WINAPI* DESTROYWINDOWPROC)(HWND);
 typedef int (WINAPI* MAPWINDOWPOINTSPROC)(HWND, HWND, LPPOINT, UINT);
 typedef BOOL (WINAPI* SHOWWINDOWPROC)(HWND, int);
+typedef BOOL (WINAPI* SETFOREGROUNDWINDOWPROC)(HWND hWnd);
 typedef HHOOK(WINAPI* SETWINDOWSHOOKEXAPROC)(int, HOOKPROC, HINSTANCE, DWORD);
 typedef int (WINAPI* GETDEVICECAPSPROC)(HDC, int);
 typedef HMODULE(WINAPI* LOADLIBRARYAPROC)(LPCSTR);
@@ -65,6 +66,7 @@ extern CREATEWINDOWEXAPROC real_CreateWindowExA;
 extern DESTROYWINDOWPROC real_DestroyWindow;
 extern MAPWINDOWPOINTSPROC real_MapWindowPoints;
 extern SHOWWINDOWPROC real_ShowWindow;
+extern SETFOREGROUNDWINDOWPROC real_SetForegroundWindow;
 extern SETWINDOWSHOOKEXAPROC real_SetWindowsHookExA;
 extern GETDEVICECAPSPROC real_GetDeviceCaps;
 extern LOADLIBRARYAPROC real_LoadLibraryA;

@@ -526,6 +526,11 @@ BOOL WINAPI fake_ShowWindow(HWND hWnd, int nCmdShow)
     return real_ShowWindow(hWnd, nCmdShow);
 }
 
+BOOL WINAPI fake_SetForegroundWindow(HWND hWnd)
+{
+    return TRUE;
+}
+
 HHOOK WINAPI fake_SetWindowsHookExA(int idHook, HOOKPROC lpfn, HINSTANCE hmod, DWORD dwThreadId)
 {
     if (idHook == WH_KEYBOARD_LL && hmod && GetModuleHandle("AcGenral") == hmod)
