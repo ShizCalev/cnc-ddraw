@@ -560,6 +560,30 @@ int WINAPI fake_GetDeviceCaps(HDC hdc, int index)
     return real_GetDeviceCaps(hdc, index);
 }
 
+HFONT WINAPI fake_CreateFontIndirectA(CONST LOGFONTA* lplf)
+{
+    LOGFONTA lf;
+    memcpy(&lf, lplf, sizeof(lf));
+    lf.lfQuality = NONANTIALIASED_QUALITY;
+
+    return real_CreateFontIndirectA(&lf);
+}
+
+HFONT WINAPI fake_CreateFontA(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
+    DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
+    DWORD fdwOutputPrecision, DWORD fdwClipPrecision, DWORD fdwQuality, DWORD fdwPitchAndFamily,
+    LPCTSTR lpszFace)
+{
+    fdwQuality = NONANTIALIASED_QUALITY;
+
+    return 
+        real_CreateFontA(
+            nHeight, nWidth, nEscapement, nOrientation, fnWeight,
+            fdwItalic, fdwUnderline, fdwStrikeOut, fdwCharSet,
+            fdwOutputPrecision, fdwClipPrecision, fdwQuality, fdwPitchAndFamily,
+            lpszFace);
+}
+
 HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName)
 {
     HMODULE hmod = real_LoadLibraryA(lpLibFileName);

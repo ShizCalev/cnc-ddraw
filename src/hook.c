@@ -43,11 +43,14 @@ SHOWWINDOWPROC real_ShowWindow = ShowWindow;
 SETFOREGROUNDWINDOWPROC real_SetForegroundWindow = SetForegroundWindow;
 SETWINDOWSHOOKEXAPROC real_SetWindowsHookExA = SetWindowsHookExA;
 GETDEVICECAPSPROC real_GetDeviceCaps = GetDeviceCaps;
+CREATEFONTINDIRECTAPROC real_CreateFontIndirectA = CreateFontIndirectA;
+CREATEFONTAPROC real_CreateFontA = CreateFontA;
 LOADLIBRARYAPROC real_LoadLibraryA = LoadLibraryA;
 LOADLIBRARYWPROC real_LoadLibraryW = LoadLibraryW;
 LOADLIBRARYEXAPROC real_LoadLibraryExA = LoadLibraryExA;
 LOADLIBRARYEXWPROC real_LoadLibraryExW = LoadLibraryExW;
 COCREATEINSTANCEPROC real_CoCreateInstance = CoCreateInstance;
+
 
 static HOOKLIST g_hooks[] =
 {
@@ -497,6 +500,20 @@ void hook_init()
     {
         BOOL initial_hook = !g_hook_active;
 
+        if (initial_hook)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourAttach((PVOID*)&real_CreateFontIndirectA, (PVOID)fake_CreateFontIndirectA);
+            DetourTransactionCommit();
+
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+            DetourAttach((PVOID*)&real_CreateFontA, (PVOID)fake_CreateFontA);
+            DetourTransactionCommit();
+        }
+
+
 #ifdef _MSC_VER
         if (initial_hook && g_hook_dinput)
         {
@@ -576,6 +593,16 @@ void hook_exit()
     if (g_hook_active)
     {
         g_hook_active = FALSE;
+
+        DetourTransactionBegin();
+        DetourUpdateThread(GetCurrentThread());
+        DetourDetach((PVOID*)&real_CreateFontIndirectA, (PVOID)fake_CreateFontIndirectA);
+        DetourTransactionCommit();
+
+        DetourTransactionBegin();
+        DetourUpdateThread(GetCurrentThread());
+        DetourDetach((PVOID*)&real_CreateFontA, (PVOID)fake_CreateFontA);
+        DetourTransactionCommit();
 
 #ifdef _MSC_VER
         if (g_hook_dinput)

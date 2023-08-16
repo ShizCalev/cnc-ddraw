@@ -30,6 +30,12 @@ BOOL WINAPI fake_ShowWindow(HWND hWnd, int nCmdShow);
 BOOL WINAPI fake_SetForegroundWindow(HWND hWnd);
 HHOOK WINAPI fake_SetWindowsHookExA(int idHook, HOOKPROC lpfn, HINSTANCE hmod, DWORD dwThreadId);
 int WINAPI fake_GetDeviceCaps(HDC hdc, int index);
+HFONT WINAPI fake_CreateFontIndirectA(CONST LOGFONTA* lplf);
+HFONT WINAPI fake_CreateFontA(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
+    DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
+    DWORD fdwOutputPrecision, DWORD fdwClipPrecision, DWORD fdwQuality, DWORD fdwPitchAndFamily,
+    LPCTSTR lpszFace);
+
 HMODULE WINAPI fake_LoadLibraryA(LPCSTR lpLibFileName);
 HMODULE WINAPI fake_LoadLibraryW(LPCWSTR lpLibFileName);
 HMODULE WINAPI fake_LoadLibraryExA(LPCSTR lpLibFileName, HANDLE hFile, DWORD dwFlags);
