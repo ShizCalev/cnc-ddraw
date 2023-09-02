@@ -2696,8 +2696,6 @@ object ConfigForm: TConfigForm
     ShowCaption = False
     TabOrder = 1
     StyleElements = [seFont, seBorder]
-    ExplicitWidth = 495
-    ExplicitHeight = 464
     DesignSize = (
       499
       465)
@@ -2716,7 +2714,7 @@ object ConfigForm: TConfigForm
     end
     object MaintasLbl: TLabel
       Left = 40
-      Top = 105
+      Top = 182
       Width = 145
       Height = 21
       Margins.Top = 18
@@ -2730,7 +2728,7 @@ object ConfigForm: TConfigForm
     end
     object VsyncLbl: TLabel
       Left = 40
-      Top = 173
+      Top = 250
       Width = 93
       Height = 21
       Margins.Top = 18
@@ -2744,7 +2742,7 @@ object ConfigForm: TConfigForm
     end
     object AdjmouseLbl: TLabel
       Left = 40
-      Top = 241
+      Top = 318
       Width = 168
       Height = 21
       Margins.Top = 18
@@ -2758,7 +2756,7 @@ object ConfigForm: TConfigForm
     end
     object DevmodeLbl: TLabel
       Left = 40
-      Top = 309
+      Top = 386
       Width = 216
       Height = 21
       Margins.Top = 18
@@ -2806,6 +2804,26 @@ object ConfigForm: TConfigForm
       Visible = False
       OnClick = LanguageImgClick
     end
+    object ResolutionLbl: TLabel
+      Left = 40
+      Top = 105
+      Width = 74
+      Height = 21
+      Caption = 'Resolution'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object ResolutionPbox: TPaintBox
+      Left = 40
+      Top = 131
+      Width = 282
+      Height = 31
+      OnPaint = PboxPaint
+    end
     object PresentationCbx: TComboBox
       Left = 41
       Top = 55
@@ -2831,7 +2849,7 @@ object ConfigForm: TConfigForm
     end
     object MaintasChk: TToggleSwitch
       Left = 40
-      Top = 132
+      Top = 209
       Width = 50
       Height = 20
       ShowStateCaption = False
@@ -2840,7 +2858,7 @@ object ConfigForm: TConfigForm
     end
     object VsyncChk: TToggleSwitch
       Left = 40
-      Top = 200
+      Top = 277
       Width = 50
       Height = 20
       ShowStateCaption = False
@@ -2849,7 +2867,7 @@ object ConfigForm: TConfigForm
     end
     object AdjmouseChk: TToggleSwitch
       Left = 40
-      Top = 268
+      Top = 345
       Width = 50
       Height = 20
       ShowStateCaption = False
@@ -2858,7 +2876,7 @@ object ConfigForm: TConfigForm
     end
     object DevmodeChk: TToggleSwitch
       Left = 40
-      Top = 336
+      Top = 413
       Width = 50
       Height = 20
       ShowStateCaption = False
@@ -2878,6 +2896,31 @@ object ConfigForm: TConfigForm
       StyleElements = [seFont, seBorder]
       OnClick = ThemePnlClick
       ExplicitLeft = 471
+    end
+    object ResolutionCbx: TComboBox
+      Left = 41
+      Top = 132
+      Width = 280
+      Height = 29
+      BevelEdges = []
+      BevelInner = bvNone
+      BevelOuter = bvSpace
+      Style = csDropDownList
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 6
+      OnChange = PresentationCbxChange
+      Items.Strings = (
+        '640x480  (4:3)'
+        '800x608  (4:3)'
+        '832x480  (16:9)'
+        '960x544  (16:9)'
+        '1280x704 (16:9)'
+        '1280x544 (21:9)')
     end
   end
   object CompatibilityPnl: TPanel

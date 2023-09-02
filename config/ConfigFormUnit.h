@@ -81,6 +81,9 @@ __published:	// Von der IDE verwaltete Komponenten
 	TComboBox *ShaderD3DCbx;
 	TSpeedButton *RestoreDefaultsBtn;
 	TPanel *ThemePnl;
+	TComboBox *ResolutionCbx;
+	TLabel *ResolutionLbl;
+	TPaintBox *ResolutionPbox;
 	void __fastcall DisplayBtnClick(TObject *Sender);
 	void __fastcall AdvancedBtnClick(TObject *Sender);
 	void __fastcall CompatibilityBtnClick(TObject *Sender);

@@ -116,6 +116,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"兼容性设置";
 		RestoreDefaultsBtn->Caption = L"恢复默认设置";
 		PresentationLbl->Caption = L"显示方式";
+		ResolutionLbl->Caption = L"解决";	
 		MaintasLbl->Caption = L"保持纵横比";
 		VsyncLbl->Caption = L"打开垂直同步";
 		AdjmouseLbl->Caption = L"调整鼠标灵敏度";
@@ -175,6 +176,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"Ajustes de compatibilidad";
 		RestoreDefaultsBtn->Caption = L"Restaurar la configuración predeterminada";
 		PresentationLbl->Caption = L"Presentación";
+		ResolutionLbl->Caption = L"Resolución";
 		MaintasLbl->Caption = L"Mantener la relación de aspecto";
 		VsyncLbl->Caption = L"Activar VSync";
 		AdjmouseLbl->Caption = L"Ajustar sensibilidad de ratón";
@@ -234,6 +236,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"Kompatibilitätseinstellungen";
 		RestoreDefaultsBtn->Caption = L"Standardeinstellungen wiederherstellen";
 		PresentationLbl->Caption = L"Darstellung";
+		ResolutionLbl->Caption = L"Auflösung";
 		MaintasLbl->Caption = L"Seitenverhältnis beibehalten";
 		VsyncLbl->Caption = L"VSync aktiveren";
 		AdjmouseLbl->Caption = L"Mausempfindlichkeit anpassen";
@@ -294,6 +297,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"Настройки совместимости";
 		RestoreDefaultsBtn->Caption = L"Восстановить настройки по умолчанию";
 		PresentationLbl->Caption = L"Отображение";
+		ResolutionLbl->Caption = L"Разрешение";
 		MaintasLbl->Caption = L"Сохранять соотношение сторон";
 		VsyncLbl->Caption = L"Включить VSync";
 		AdjmouseLbl->Caption = L"Регулировка чувствительности мыши";
@@ -353,6 +357,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"Kompatibilitás Beállítások";
 		RestoreDefaultsBtn->Caption = L"Visszaállítja az alapértelmezett beállításokat";
 		PresentationLbl->Caption = L"Bemutató";
+		ResolutionLbl->Caption = L"Felbontás";
 		MaintasLbl->Caption = L"Képarány megtartása";
 		VsyncLbl->Caption = L"VSync bekapcsolása";
 		AdjmouseLbl->Caption = L"Egérérzékenység beállítás";
@@ -412,6 +417,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"Paramètres de Compatibilité";
 		RestoreDefaultsBtn->Caption = L"Restaurer les paramètres par défaut";
 		PresentationLbl->Caption = L"Présentation";
+		ResolutionLbl->Caption = L"Résolution";
 		MaintasLbl->Caption = L"Conserver les proportions de l'image";
 		VsyncLbl->Caption = L"Activer la synchro verticale (VSync)";
 		AdjmouseLbl->Caption = L"Ajuster la sensibilité souris";
@@ -471,6 +477,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"Impostazioni di compatibilità";
 		RestoreDefaultsBtn->Caption = L"Ripristina le impostazioni predefinite";
 		PresentationLbl->Caption = L"Presentazione";
+		ResolutionLbl->Caption = L"Risoluzione";
 		MaintasLbl->Caption = L"Mantieni il rapporto d'aspetto";
 		VsyncLbl->Caption = L"Abilita la sincronizzazione verticale (VSync)";
 		AdjmouseLbl->Caption = L"Regola la sensibilità del mouse";
@@ -575,6 +582,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		CompatibilityBtn->Caption = L"Compatibility Settings";
 		RestoreDefaultsBtn->Caption = L"Restore default settings";
 		PresentationLbl->Caption = L"Presentation";
+		ResolutionLbl->Caption = L"Resolution";
 		MaintasLbl->Caption = L"Maintain aspect ratio";
 		VsyncLbl->Caption = L"Enable VSync";
 		AdjmouseLbl->Caption = L"Adjust mouse sensitivity";
@@ -694,6 +702,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	}
 
 	auto *ini = new TIniFile(".\\dd-hd.ini");
+	auto *hd_ini = new TIniFile(".\\Warcraft_II_HD.ini");
 
 	if (ini->ReadString("ddraw", "configtheme", "Windows10") == "Cobalt XEMedia") {
 
@@ -725,6 +734,18 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	}
 	else {
 		PresentationCbx->ItemIndex = 0;
+	}
+
+	int cwidth = hd_ini->ReadInteger("Warcraft_II_HD", "Width", 0);
+	int cheight = hd_ini->ReadInteger("Warcraft_II_HD", "Height", 0);
+	int reso = hd_ini->ReadInteger("Warcraft_II_HD", "Resolution", 3);
+
+	if (!cwidth || !cheight) {
+		ResolutionCbx->ItemIndex = reso <= 5 ? reso : 3; 	
+	}
+	else {
+		ResolutionCbx->AddItem(IntToStr(cwidth) + "x" + IntToStr(cheight), NULL);
+		ResolutionCbx->ItemIndex = ResolutionCbx->Items->Count - 1;
 	}
 
 	MaintasChk->State = GetBool(ini, "maintas", false) ? tssOn : tssOff;
@@ -889,6 +910,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 		GetBool(ini, "allow_reset", true);
 
 	delete ini;
+	delete hd_ini;
 
 	Initialized = true;
 }
@@ -899,6 +921,7 @@ void TConfigForm::SaveSettings()
 		return;
 
 	auto *ini = new TIniFile(".\\dd-hd.ini");
+	auto *hd_ini = new TIniFile(".\\Warcraft_II_HD.ini");
 
 	/* Display Settings */
 
@@ -923,6 +946,18 @@ void TConfigForm::SaveSettings()
 		break;
 	default:
 		break;
+	}
+
+	if (ResolutionCbx->ItemIndex <= 5) {
+		hd_ini->WriteInteger(
+			"Warcraft_II_HD", "Resolution", ResolutionCbx->ItemIndex);
+
+		hd_ini->WriteInteger("Warcraft_II_HD", "Width", 0);	
+		hd_ini->WriteInteger("Warcraft_II_HD", "Height", 0);
+
+		if (ResolutionCbx->Items->Count == 7) {
+			ResolutionCbx->Items->Delete(6);
+		}			
 	}
 
 	ini->WriteString(
@@ -1112,6 +1147,7 @@ void TConfigForm::SaveSettings()
 		NonexclusiveChk->State == tssOn ? "true" : "false");
 
 	delete ini;
+	delete hd_ini;
 }
 
 void __fastcall TConfigForm::FormActivate(TObject *Sender)
@@ -1339,4 +1375,5 @@ void __fastcall TConfigForm::PboxPaint(TObject *Sender)
 	TPaintBox *pbox = static_cast<TPaintBox*>(Sender);
 	//pbox->Canvas->Rectangle(pbox->ClientRect);
 }
+
 
