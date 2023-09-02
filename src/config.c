@@ -279,7 +279,7 @@ static void cfg_create_ini()
             "\n"
             "; Preliminary libretro shader support - (Requires 'renderer=opengl') https://github.com/libretro/glsl-shaders\n"
             "; 2x scaling example: https://imgur.com/a/kxsM1oY - 4x scaling example: https://imgur.com/a/wjrhpFV\n"
-            "shader=Shaders\\interpolation\\bilinear.glsl\n"
+            "shader=Shaders\\interpolation\\catmull-rom-bilinear.glsl\n"
             "\n"
             "; Window position, -32000 = center to screen\n"
             "posX=-32000\n"
