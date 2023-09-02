@@ -781,15 +781,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	}
 	catch (...)
 	{
-	}
-
-	if (ShaderCbx->Items->Count == 0) {
-		ShaderCbx->AddItem("Nearest neighbor", NULL);
-		ShaderCbx->AddItem("Bilinear", NULL);
-		ShaderCbx->AddItem("Bicubic", NULL);
-		ShaderCbx->AddItem("Lanczos", NULL);
-		ShaderCbx->AddItem("xBR-lv2", NULL);
-	}
+	}	
 
 	auto shader = ini->ReadString("ddraw", "shader", "Bicubic");
 	ShaderCbx->ItemIndex = ShaderCbx->Items->IndexOf(shader);
@@ -799,24 +791,15 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 		ShaderCbx->ItemIndex = ShaderCbx->Items->Count - 1;
 	}
 
-	int d3d9_filter = ini->ReadInteger("ddraw", "d3d9_filter", 2);
+	bool d3d9_filter = GetBool(ini, "d3d9linear", true);
 
-	switch (d3d9_filter) {
-	case 0:
-		ShaderD3DCbx->ItemIndex = 0;
-		break;
-	case 1:
+	if (d3d9_filter) {
 		ShaderD3DCbx->ItemIndex = 1;
-		break;
-	case 2:
-	default:
-		ShaderD3DCbx->ItemIndex = 2;
-		break;
-	case 3:
-		ShaderD3DCbx->ItemIndex = 3;
-		break;
 	}
-
+	else {
+		ShaderD3DCbx->ItemIndex = 0;
+	}
+	
 	Maxfps = ini->ReadInteger("ddraw", "maxfps", -1);
 	MaxfpsChk->State = Maxfps != 0 ? tssOn : tssOff;
 
@@ -991,8 +974,13 @@ void TConfigForm::SaveSettings()
 
 	ini->WriteString("ddraw", "shader", ShaderCbx->Text);
 
-	ini->WriteInteger("ddraw", "d3d9_filter", ShaderD3DCbx->ItemIndex);
-
+	if (ShaderD3DCbx->ItemIndex == 0) {
+		ini->WriteString("ddraw", "d3d9linear", "false");
+	}
+	else {
+		ini->WriteString("ddraw", "d3d9linear", "true");
+	}
+	
 	int maxfps = Maxfps == 0 ? -1 : Maxfps;
 
 	ini->WriteInteger(
