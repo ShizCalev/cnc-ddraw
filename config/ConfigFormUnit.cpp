@@ -7,6 +7,8 @@
 #include <StrUtils.hpp>
 #include <IOUtils.hpp>
 #include <SysUtils.hpp>
+#include <Registry.hpp>
+#include <System.Hash.hpp>
 #include "ConfigFormUnit.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -18,7 +20,7 @@ bool IsEnglish;
 /* Save previous settings so we don't override custom settings */
 int Maxfps;
 int Savesettings;
-int Hook;
+int Resolutions;
 int Minfps;
 
 //---------------------------------------------------------------------------
@@ -27,9 +29,18 @@ __fastcall TConfigForm::TConfigForm(TComponent* Owner)
 {
 }
 
+void __fastcall TConfigForm::CreateParams(TCreateParams & Params)
+{
+	TForm::CreateParams(Params);
+
+	StrCopy(
+		Params.WinClassName,
+		THashSHA1::GetHashString(Application->ExeName).w_str());
+}
+
 void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 {
-	auto *ini = new TIniFile(".\\ddraw.ini");
+	auto *ini = new TIniFile(".\\dd-hd.ini");
 	ini->WriteString("ddraw", "configlang", IsEnglish ? "auto" : "english");
 	delete ini;
 
@@ -37,7 +48,51 @@ void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 		NULL,
 		L"open",
 		Application->ExeName.w_str(),
+		L"-restart",
 		NULL,
+		SW_SHOWNORMAL);
+
+	Application->Terminate();
+}
+
+void __fastcall TConfigForm::ThemePnlClick(TObject *Sender)
+{
+	auto *ini = new TIniFile(".\\dd-hd.ini");
+	auto theme =
+		ThemePnl->Color == (TColor)RGB(31, 31, 31) ? "Cobalt XEMedia" : "Windows10";
+
+	ini->WriteString("ddraw", "configtheme", theme);
+
+	delete ini;
+
+	ShellExecute(
+		NULL,
+		L"open",
+		Application->ExeName.w_str(),
+		L"-restart",
+		NULL,
+		SW_SHOWNORMAL);
+
+	Application->Terminate();
+}
+
+void __fastcall TConfigForm::RestoreDefaultsBtnClick(TObject *Sender)
+{
+	if (Application->MessageBox(
+			(RestoreDefaultsBtn->Caption + "?").w_str(),
+			L"cnc-ddraw",
+			MB_YESNO) == IDNO) {
+
+		return;
+	}
+
+	DeleteFile(".\\dd-hd.ini");
+
+	ShellExecute(
+		NULL,
+		L"open",
+		Application->ExeName.w_str(),
+		L"-restart",
 		NULL,
 		SW_SHOWNORMAL);
 
@@ -57,7 +112,9 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"cnc-ddraw 配置";
 		DisplayBtn->Caption = L"显示设置";
 		AdvancedBtn->Caption = L"高级设置";
+		HotkeyBtn->Caption = L"热键设置";
 		CompatibilityBtn->Caption = L"兼容性设置";
+		RestoreDefaultsBtn->Caption = L"恢复默认设置";
 		PresentationLbl->Caption = L"显示方式";
 		MaintasLbl->Caption = L"保持纵横比";
 		VsyncLbl->Caption = L"打开垂直同步";
@@ -69,11 +126,16 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"OpenGL着色器";
 		MaxfpsLbl->Caption = L"限制帧率";
 		BoxingLbl->Caption = L"打开窗盒显示/整数缩放";
+		ToggleWindowedLbl->Caption = L"切换窗口模式";
+		MaximizeWindowLbl->Caption = L"最大化窗口";
+		UnlockCursor1Lbl->Caption = L"解锁光标 1";
+		UnlockCursor2Lbl->Caption = L"解锁光标 2";
+		ScreenshotLbl->Caption = L"截屏";
 		MaxgameticksLbl->Caption = L"限制游戏速率";
 		NoactivateappLbl->Caption = L"修复损坏的Alt+Tab功能";
-		HookLbl->Caption = L"修复损坏的窗口模式或拉伸";
+		ResolutionsLbl->Caption = L"解锁其他屏幕分辨率";
 		MinfpsLbl->Caption = L"强制高FPS / 修复使用Freesync/G-Sync的卡顿问题";
-		FixpitchLbl->Caption = L"修复倾斜撕裂显示的问题";
+		SinglecpuLbl->Caption = L"修复性能不佳和声音问题";
 		NonexclusiveLbl->Caption = L"修复不显示的视频/UI元素";
 
 		RendererCbx->Items->Clear();
@@ -94,6 +156,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"模拟60hz刷新率显示器", NULL);
 		MaxgameticksCbx->AddItem(L"1000tick每秒", NULL);
 		MaxgameticksCbx->AddItem(L"500tick每秒", NULL);
+		MaxgameticksCbx->AddItem(L"250tick每秒", NULL);
+		MaxgameticksCbx->AddItem(L"125tick每秒", NULL);
 		MaxgameticksCbx->AddItem(L"60tick每秒", NULL);
 		MaxgameticksCbx->AddItem(L"30tick每秒", NULL);
 		MaxgameticksCbx->AddItem(L"25tick每秒", NULL);
@@ -107,7 +171,9 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"Ajustes de cnc-ddraw";
 		DisplayBtn->Caption = L"Ajustes de pantalla";
 		AdvancedBtn->Caption = L"Ajustes avanzados";
+		HotkeyBtn->Caption = L"Teclas de acceso rápido";
 		CompatibilityBtn->Caption = L"Ajustes de compatibilidad";
+		RestoreDefaultsBtn->Caption = L"Restaurar la configuración predeterminada";
 		PresentationLbl->Caption = L"Presentación";
 		MaintasLbl->Caption = L"Mantener la relación de aspecto";
 		VsyncLbl->Caption = L"Activar VSync";
@@ -119,11 +185,16 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"Sombreador OpenGL";
 		MaxfpsLbl->Caption = L"Limitar velocidad de fotogramas";
 		BoxingLbl->Caption = L"Activar encajado de ventanas / escalado de enteros";
+		ToggleWindowedLbl->Caption = L"Alternar modo de ventana";
+		MaximizeWindowLbl->Caption = L"Maximizar ventana";
+		UnlockCursor1Lbl->Caption = L"Desbloquear cursor 1";
+		UnlockCursor2Lbl->Caption = L"Desbloquear cursor 2";
+		ScreenshotLbl->Caption = L"Captura de pantalla";
 		MaxgameticksLbl->Caption = L"Limitar velocidad de juego";
 		NoactivateappLbl->Caption = L"Corregir Alt+Tab roto";
-		HookLbl->Caption = L"Corregir modo ventana o ampliación de escala";
+		ResolutionsLbl->Caption = L"Desbloquear resoluciones de pantalla adicionales";
 		MinfpsLbl->Caption = L"Forzar un alto FPS / Corregir retrasos en Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Corregir problemas de visualización de dibujos en diagonal";
+		SinglecpuLbl->Caption = L"Solucione el mal rendimiento y los problemas de sonido";
 		NonexclusiveLbl->Caption = L"Corregir vídeos / elementos de interfaz invisibles";
 
 		RendererCbx->Items->Clear();
@@ -144,6 +215,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Emular monitor con tasa de refresco de 60hz", NULL);
 		MaxgameticksCbx->AddItem(L"1000 tics por segundo", NULL);
 		MaxgameticksCbx->AddItem(L"500 tics por segundo", NULL);
+		MaxgameticksCbx->AddItem(L"250 tics por segundo", NULL);
+		MaxgameticksCbx->AddItem(L"125 tics por segundo", NULL);
 		MaxgameticksCbx->AddItem(L"60 tics por segundo", NULL);
 		MaxgameticksCbx->AddItem(L"30 tics por segundo", NULL);
 		MaxgameticksCbx->AddItem(L"25 tics por segundo", NULL);
@@ -157,23 +230,30 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"cnc-ddraw Konfiguration";
 		DisplayBtn->Caption = L"Anzeigeeinstellungen";
 		AdvancedBtn->Caption = L"Erweiterte Einstellungen";
+		HotkeyBtn->Caption = L"Tastenkürzel-Einstellungen";
 		CompatibilityBtn->Caption = L"Kompatibilitätseinstellungen";
-		PresentationLbl->Caption = L"Presentation";
-		MaintasLbl->Caption = L"Erhalte Seitenverhältnis";
+		RestoreDefaultsBtn->Caption = L"Standardeinstellungen wiederherstellen";
+		PresentationLbl->Caption = L"Darstellung";
+		MaintasLbl->Caption = L"Seitenverhältnis beibehalten";
 		VsyncLbl->Caption = L"VSync aktiveren";
 		AdjmouseLbl->Caption = L"Mausempfindlichkeit anpassen";
 		DevmodeLbl->Caption = L"Sperre Cursor zu Fenster / Bildschirm"; //Not 100% sure, if not a better translation exists
 		RendererLbl->Caption = L"Renderer";
 		BorderLbl->Caption = L"Zeige Fensterränder in Fenstermodus";
 		SavesettingsLbl->Caption = L"Fensterposition und Größe merken";
-		ShaderLbl->Caption = L"OpenGL shader";
+		ShaderLbl->Caption = L"OpenGL Shader";
 		MaxfpsLbl->Caption = L"Limitiere Aktualisierungsrate";
 		BoxingLbl->Caption = L"Fensterboxing / Integer Skalierung aktivieren"; //Not 100% sure if "windowboxing" can be translated better.
+		ToggleWindowedLbl->Caption = L"Fenstermodus umschalten";
+		MaximizeWindowLbl->Caption = L"Fenster maximieren";
+		UnlockCursor1Lbl->Caption = L"Cursor entsperren 1";
+		UnlockCursor2Lbl->Caption = L"Cursor entsperren 2";
+		ScreenshotLbl->Caption = L"Bildschirmfoto";
 		MaxgameticksLbl->Caption = L"Spielgeschwindigkeit limitieren";
 		NoactivateappLbl->Caption = L"Fehlerhaftes Alt+Tab reparieren"; //The first word can be ignored if its to long (eng word "Fix"
-		HookLbl->Caption = L"Fehlerhafter Fenstermodus oder Hochskalierung reparieren"; //The first word can be ignored if its to long (eng word "Fix")
+		ResolutionsLbl->Caption = L"Zusätzliche Bildschirmauflösungen freischalten";
 		MinfpsLbl->Caption = L"Erzwinge Hohe FPS / Repariere Stottern bei Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Diagonal dargestellte Zeichnungsfehler reparieren";
+		SinglecpuLbl->Caption = L"Schlechte Leistung und Soundprobleme reparieren";
 		NonexclusiveLbl->Caption = L"Unsichtbare Videos / UI Elemente reparieren";
 
 		RendererCbx->Items->Clear();
@@ -186,7 +266,7 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		PresentationCbx->AddItem(L"Vollbild", NULL);
 		PresentationCbx->AddItem(L"Hochskaliertes Vollbild", NULL);
 		PresentationCbx->AddItem(L"Ränderfreies Fenster", NULL);
-		PresentationCbx->AddItem(L"Fenster", NULL);
+		PresentationCbx->AddItem(L"Fenstermodus", NULL);
 
 		MaxgameticksCbx->Items->Clear();
 		MaxgameticksCbx->AddItem(L"Unlimitiert", NULL);
@@ -194,6 +274,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Emuliere 60hz Bildschirmaktualisierungsrate", NULL);
 		MaxgameticksCbx->AddItem(L"1000 Ticks pro Sekunde", NULL);
 		MaxgameticksCbx->AddItem(L"500 Ticks pro Sekunde", NULL);
+		MaxgameticksCbx->AddItem(L"250 Ticks pro Sekunde", NULL);
+		MaxgameticksCbx->AddItem(L"125 Ticks pro Sekunde", NULL);
 		MaxgameticksCbx->AddItem(L"60 Ticks pro Sekunde", NULL);
 		MaxgameticksCbx->AddItem(L"30 Ticks pro Sekunde", NULL);
 		MaxgameticksCbx->AddItem(L"25 Ticks pro Sekunde", NULL);
@@ -202,16 +284,15 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 	else if (lang == "russian" || (lang == "auto" && priID == LANG_RUSSIAN)) {
 		LanguageImg->Visible = true;
 		ClientWidth *= 1.13;
-		DisplayPnl->Width *= 1.184;
-		AdvancedPnl->Width *= 1.184;
-		CompatibilityPnl->Width *= 1.184;
 
 		/* -Russian- made by shikulja @ github */
 
 		ConfigForm->Caption = L"Настройки cnc-ddraw";
 		DisplayBtn->Caption = L"Настройки отображения";
 		AdvancedBtn->Caption = L"Расширенные настройки";
+		HotkeyBtn->Caption = L"Настройки горячих клавиш";
 		CompatibilityBtn->Caption = L"Настройки совместимости";
+		RestoreDefaultsBtn->Caption = L"Восстановить настройки по умолчанию";
 		PresentationLbl->Caption = L"Отображение";
 		MaintasLbl->Caption = L"Сохранять соотношение сторон";
 		VsyncLbl->Caption = L"Включить VSync";
@@ -223,11 +304,16 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"Шейдер OpenGL";
 		MaxfpsLbl->Caption = L"Ограничить частоту кадров";
 		BoxingLbl->Caption = L"Включить windowboxing / целочисленное масштабирование";
+		ToggleWindowedLbl->Caption = L"Переключить оконный режим";
+		MaximizeWindowLbl->Caption = L"Развернуть окно";
+		UnlockCursor1Lbl->Caption = L"Разблокировать курсор 1";
+		UnlockCursor2Lbl->Caption = L"Разблокировать курсор 2";
+		ScreenshotLbl->Caption = L"Скриншот";
 		MaxgameticksLbl->Caption = L"Ограничить скорость игры";
 		NoactivateappLbl->Caption = L"Исправить сломанный Alt+Tab";
-		HookLbl->Caption = L"Исправить сломанный оконный режим или масштабированние";
+		ResolutionsLbl->Caption = L"Разблокировать дополнительные разрешения экрана";
 		MinfpsLbl->Caption = L"Принудительно высокий FPS / Исправить заикание при Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Исправить проблемы с отображением отрисовки по диагонали";
+		SinglecpuLbl->Caption = L"Исправление проблем с производительностью и звуком";
 		NonexclusiveLbl->Caption = L"Исправить невидимые видео / элементы пользовательского интерфейса";
 
 		RendererCbx->Items->Clear();
@@ -248,6 +334,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Эмуляция частоты обновления монитора 60 Гц", NULL);
 		MaxgameticksCbx->AddItem(L"1000 тиков в секунду", NULL);
 		MaxgameticksCbx->AddItem(L"500 тиков в секунду", NULL);
+		MaxgameticksCbx->AddItem(L"250 тиков в секунду", NULL);
+		MaxgameticksCbx->AddItem(L"125 тиков в секунду", NULL);
 		MaxgameticksCbx->AddItem(L"60 тиков в секунду", NULL);
 		MaxgameticksCbx->AddItem(L"30 тиков в секунду", NULL);
 		MaxgameticksCbx->AddItem(L"25 тиков в секунду", NULL);
@@ -261,7 +349,9 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"cnc-ddraw Beállító";
 		DisplayBtn->Caption = L"Képbeállítások";
 		AdvancedBtn->Caption = L"Haladó Beállítások";
+		HotkeyBtn->Caption = L"Gyorsbillentyűk beállításai";
 		CompatibilityBtn->Caption = L"Kompatibilitás Beállítások";
+		RestoreDefaultsBtn->Caption = L"Visszaállítja az alapértelmezett beállításokat";
 		PresentationLbl->Caption = L"Bemutató";
 		MaintasLbl->Caption = L"Képarány megtartása";
 		VsyncLbl->Caption = L"VSync bekapcsolása";
@@ -273,11 +363,16 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"OpenGL árnyaló";
 		MaxfpsLbl->Caption = L"Képkockaszám korlátozás";
 		BoxingLbl->Caption = L"Ablakos mód / felskálázás bekapcsolása";
+		ToggleWindowedLbl->Caption = L"Az ablakos mód váltása";
+		MaximizeWindowLbl->Caption = L"Az ablak maximalizálása";
+		UnlockCursor1Lbl->Caption = L"A kurzor feloldása 1";
+		UnlockCursor2Lbl->Caption = L"A kurzor feloldása 2";
+		ScreenshotLbl->Caption = L"Képernyőkép";
 		MaxgameticksLbl->Caption = L"Játéksebesség korlátozás";
 		NoactivateappLbl->Caption = L"Alt+Tab hiba kiküszöbölése";
-		HookLbl->Caption = L"Hibás ablakos mód, vagy felskálázás javítása";
+		ResolutionsLbl->Caption = L"További képernyőfelbontások feloldása";
 		MinfpsLbl->Caption = L"Magas FPS kényszerítés / Akadozásjavítás Freesync/G-Sync esetén";
-		FixpitchLbl->Caption = L"Átlós rajzolási gondok kiküszöbölése";
+		SinglecpuLbl->Caption = L"Javítsa ki a rossz teljesítmény- és hangproblémákat";
 		NonexclusiveLbl->Caption = L"Láthatatlan videók / kezelőfelületi elemek javítása";
 
 		RendererCbx->Items->Clear();
@@ -298,6 +393,8 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"60hz képfrissítésű kijelző emulálása", NULL);
 		MaxgameticksCbx->AddItem(L"1000 tick másodpercenként", NULL);
 		MaxgameticksCbx->AddItem(L"500 tick másodpercenként", NULL);
+		MaxgameticksCbx->AddItem(L"250 tick másodpercenként", NULL);
+		MaxgameticksCbx->AddItem(L"125 tick másodpercenként", NULL);
 		MaxgameticksCbx->AddItem(L"60 tick másodpercenként", NULL);
 		MaxgameticksCbx->AddItem(L"30 tick másodpercenként", NULL);
 		MaxgameticksCbx->AddItem(L"25 tick másodpercenként", NULL);
@@ -311,7 +408,9 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"Configuration cnc-ddraw";
 		DisplayBtn->Caption = L"Paramètres d'Affichage";
 		AdvancedBtn->Caption = L"Paramètres Avancés";
+		HotkeyBtn->Caption = L"Paramètres de raccourci";
 		CompatibilityBtn->Caption = L"Paramètres de Compatibilité";
+		RestoreDefaultsBtn->Caption = L"Restaurer les paramètres par défaut";
 		PresentationLbl->Caption = L"Présentation";
 		MaintasLbl->Caption = L"Conserver les proportions de l'image";
 		VsyncLbl->Caption = L"Activer la synchro verticale (VSync)";
@@ -323,11 +422,16 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"Shader OpenGL";
 		MaxfpsLbl->Caption = L"Limiter les images par seconde (FPS)";
 		BoxingLbl->Caption = L"Activer windowboxing / mise à l'échelle par nombres entiers";
+		ToggleWindowedLbl->Caption = L"Basculer en mode fenêtré";
+		MaximizeWindowLbl->Caption = L"Agrandir la fenêtre";
+		UnlockCursor1Lbl->Caption = L"Déverrouiller le curseur 1";
+		UnlockCursor2Lbl->Caption = L"Déverrouiller le curseur 2";
+		ScreenshotLbl->Caption = L"Capture d'écran";
 		MaxgameticksLbl->Caption = L"Limiter la vitesse du jeu";
 		NoactivateappLbl->Caption = L"Corriger Alt+Tab défaillant";
-		HookLbl->Caption = L"Corriger mode fenêtré ou mise à l'échelle défaillant";
+		ResolutionsLbl->Caption = L"Déverrouiller des résolutions d'écran supplémentaires";
 		MinfpsLbl->Caption = L"Forcer FPS élevé / Corriger saccades en Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Corriger défauts d'affichage diagonaux";
+		SinglecpuLbl->Caption = L"Résoudre les problèmes de mauvaise performance et de son";
 		NonexclusiveLbl->Caption = L"Corriger vidéos et éléments d'interface invisibles";
 
 		RendererCbx->Items->Clear();
@@ -348,10 +452,71 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Émuler un écran à 60Hz", NULL);
 		MaxgameticksCbx->AddItem(L"1000 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"500 tics par seconde", NULL);
+		MaxgameticksCbx->AddItem(L"250 tics par seconde", NULL);
+		MaxgameticksCbx->AddItem(L"125 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"60 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"30 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"25 tics par seconde", NULL);
 		MaxgameticksCbx->AddItem(L"15 tics par seconde", NULL);
+	}
+	else if (lang == "italian" || (lang == "auto" && priID == LANG_ITALIAN)) {
+		LanguageImg->Visible = true;
+
+		/* -Italian - made by Kappa971 @ github */
+
+		ConfigForm->Caption = L"Configurazione di cnc-ddraw";
+		DisplayBtn->Caption = L"Impostazioni dello schermo";
+		AdvancedBtn->Caption = L"Impostazioni avanzate";
+		HotkeyBtn->Caption = L"Tasti di scelta rapida";
+		CompatibilityBtn->Caption = L"Impostazioni di compatibilità";
+		RestoreDefaultsBtn->Caption = L"Ripristina le impostazioni predefinite";
+		PresentationLbl->Caption = L"Presentazione";
+		MaintasLbl->Caption = L"Mantieni il rapporto d'aspetto";
+		VsyncLbl->Caption = L"Abilita la sincronizzazione verticale (VSync)";
+		AdjmouseLbl->Caption = L"Regola la sensibilità del mouse";
+		DevmodeLbl->Caption = L"Cattura il cursore nella finestra / schermo";
+		RendererLbl->Caption = L"Renderer";
+		BorderLbl->Caption = L"Mostra i bordi della finestra in modalità finestra";
+		SavesettingsLbl->Caption = L"Ricorda la posizione e le dimensioni della finestra";
+		ShaderLbl->Caption = L"Shader OpenGL";
+		MaxfpsLbl->Caption = L"Limita la frequenza dei fotogrammi (FPS)";
+		BoxingLbl->Caption = L"Abilita il ridimensionamento dei numeri interi";
+		ToggleWindowedLbl->Caption = L"Attiva/disattiva la modalità finestra";
+		MaximizeWindowLbl->Caption = L"Ingrandisci finestra";
+		UnlockCursor1Lbl->Caption = L"Sblocca cursore 1";
+		UnlockCursor2Lbl->Caption = L"Sblocca cursore 2";
+		ScreenshotLbl->Caption = L"Istantanea dello schermo";
+		MaxgameticksLbl->Caption = L"Limita la velocità di gioco";
+		NoactivateappLbl->Caption = L"Correggi il funzionamento di Alt+Tab";
+		ResolutionsLbl->Caption = L"Sblocca ulteriori risoluzioni dello schermo";
+		MinfpsLbl->Caption = L"Forza FPS elevati / Correggi balbuzie su Freesync/G-Sync";
+		SinglecpuLbl->Caption = L"Risolvi problemi di prestazioni e audio scadenti";
+		NonexclusiveLbl->Caption = L"Correggi video / elementi dell'interfaccia utente invisibili";
+
+		RendererCbx->Items->Clear();
+		RendererCbx->AddItem(L"Automatico", NULL);
+		RendererCbx->AddItem(L"Direct3D 9", NULL);
+		RendererCbx->AddItem(L"OpenGL", NULL);
+		RendererCbx->AddItem(L"GDI", NULL);
+
+		PresentationCbx->Items->Clear();
+		PresentationCbx->AddItem(L"Schermo Intero", NULL);
+		PresentationCbx->AddItem(L"Schermo Intero Ridimensionato", NULL);
+		PresentationCbx->AddItem(L"Senza Bordi", NULL);
+		PresentationCbx->AddItem(L"In Finestra", NULL);
+
+		MaxgameticksCbx->Items->Clear();
+		MaxgameticksCbx->AddItem(L"Senza Limiti", NULL);
+		MaxgameticksCbx->AddItem(L"Sincronizza con la frequenza dello schermo", NULL);
+		MaxgameticksCbx->AddItem(L"Emula uno schermo a 60Hz", NULL);
+		MaxgameticksCbx->AddItem(L"1000 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"500 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"250 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"125 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"60 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"30 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"25 tick al secondo", NULL);
+		MaxgameticksCbx->AddItem(L"15 tick al secondo", NULL);
 	}
 	else {
 		IsEnglish = true;
@@ -393,6 +558,12 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 				LanguageImg->Picture->Graphic = png;
 				LanguageImg->Visible = true;
 			}
+			else if (priID == LANG_ITALIAN) {
+				TPngImage *png = new TPngImage();
+				png->LoadFromResourceName((int)HInstance, "PngImage_IT");
+				LanguageImg->Picture->Graphic = png;
+				LanguageImg->Visible = true;
+			}
 		} catch (...) {
 		}
 
@@ -400,7 +571,9 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ConfigForm->Caption = L"cnc-ddraw config";
 		DisplayBtn->Caption = L"Display Settings";
 		AdvancedBtn->Caption = L"Advanced Settings";
+		HotkeyBtn->Caption = L"Hotkey Settings";
 		CompatibilityBtn->Caption = L"Compatibility Settings";
+		RestoreDefaultsBtn->Caption = L"Restore default settings";
 		PresentationLbl->Caption = L"Presentation";
 		MaintasLbl->Caption = L"Maintain aspect ratio";
 		VsyncLbl->Caption = L"Enable VSync";
@@ -412,11 +585,16 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		ShaderLbl->Caption = L"OpenGL shader";
 		MaxfpsLbl->Caption = L"Limit frame rate";
 		BoxingLbl->Caption = L"Enable windowboxing / integer scaling";
+		ToggleWindowedLbl->Caption = L"Toggle windowed mode";
+		MaximizeWindowLbl->Caption = L"Maximize window";
+		UnlockCursor1Lbl->Caption = L"Unlock cursor 1";
+		UnlockCursor2Lbl->Caption = L"Unlock cursor 2";
+		ScreenshotLbl->Caption = L"Screenshot";
 		MaxgameticksLbl->Caption = L"Limit game speed";
 		NoactivateappLbl->Caption = L"Fix broken Alt+Tab";
-		HookLbl->Caption = L"Fix broken windowed mode or upscaling";
+		ResolutionsLbl->Caption = L"Unlock additional screen resolutions";
 		MinfpsLbl->Caption = L"Force high FPS / Fix stuttering on Freesync/G-Sync";
-		FixpitchLbl->Caption = L"Fix diagonally displayed drawing issues";
+		SinglecpuLbl->Caption = L"Fix bad performance and sound issues";
 		NonexclusiveLbl->Caption = L"Fix invisible videos / UI elements";
 
 		RendererCbx->Items->Clear();
@@ -437,24 +615,45 @@ void TConfigForm::ApplyTranslation(TIniFile *ini)
 		MaxgameticksCbx->AddItem(L"Emulate 60hz refresh rate monitor", NULL);
 		MaxgameticksCbx->AddItem(L"1000 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"500 ticks per second", NULL);
+		MaxgameticksCbx->AddItem(L"250 ticks per second", NULL);
+		MaxgameticksCbx->AddItem(L"125 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"60 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"30 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"25 ticks per second", NULL);
 		MaxgameticksCbx->AddItem(L"15 ticks per second", NULL);
 		*/
 	}
+
+	ToggleWindowedKeyLbl->Caption = GetKeyText(VK_MENU) + L" +";
+	MaximizeWindowKeyLbl->Caption = GetKeyText(VK_MENU) + L" +";
+	UnlockCursor1KeyLbl->Caption = GetKeyText(VK_CONTROL) + L" +";
+	UnlockCursor2KeyLbl->Caption = "R " + GetKeyText(VK_MENU) + L" +";
+
+	ConfigForm->Caption +=
+		" (" + TPath::GetFileName(
+					TPath::GetDirectoryName(Application->ExeName)) + ")";
 }
 
 void __fastcall TConfigForm::DisplayBtnClick(TObject *Sender)
 {
 	DisplayPnl->Visible = true;
 	AdvancedPnl->Visible = false;
+	HotkeyPnl->Visible = false;
 	CompatibilityPnl->Visible = false;
 }
 
 void __fastcall TConfigForm::AdvancedBtnClick(TObject *Sender)
 {
 	AdvancedPnl->Visible = true;
+	DisplayPnl->Visible = false;
+	HotkeyPnl->Visible = false;
+	CompatibilityPnl->Visible = false;
+}
+
+void __fastcall TConfigForm::HotkeyBtnClick(TObject *Sender)
+{
+	HotkeyPnl->Visible = true;
+	AdvancedPnl->Visible = false;
 	DisplayPnl->Visible = false;
 	CompatibilityPnl->Visible = false;
 }
@@ -464,11 +663,49 @@ void __fastcall TConfigForm::CompatibilityBtnClick(TObject *Sender)
 	CompatibilityPnl->Visible = true;
 	AdvancedPnl->Visible = false;
 	DisplayPnl->Visible = false;
+	HotkeyPnl->Visible = false;
 }
 
 void __fastcall TConfigForm::FormCreate(TObject *Sender)
 {
-	auto *ini = new TIniFile(".\\ddraw.ini");
+	/* Let cnc-ddraw create a new dd-hd.ini if it doesn't exist */
+	if (FileExists(".\\ddraw.dll") && !FileExists(".\\dd-hd.ini")) {
+
+		SetEnvironmentVariableW(L"cnc_ddraw_config_init", L"1");
+
+		HMODULE ddraw = LoadLibraryW(L".\\ddraw.dll");
+
+		if (ddraw) {
+
+			void (WINAPI* dd_create)(void*, void**, void*);
+
+			dd_create =
+				(void (WINAPI*)(void*, void**, void*))
+					GetProcAddress(ddraw, "DirectDrawCreate");
+
+			if (dd_create && GetProcAddress(ddraw, "GameHandlesClose")) {
+
+				void *buf;
+				dd_create(NULL, &buf, NULL);
+			}
+
+			FreeLibrary(ddraw);
+		}
+	}
+
+	auto *ini = new TIniFile(".\\dd-hd.ini");
+
+	if (ini->ReadString("ddraw", "configtheme", "Windows10") == "Cobalt XEMedia") {
+
+		ThemePnl->Color = (TColor)RGB(243, 243, 243);
+		DisplayPnl->StyleElements = TStyleElements(seFont + seClient + seBorder);
+		AdvancedPnl->StyleElements = TStyleElements(seFont + seClient + seBorder);
+		HotkeyPnl->StyleElements = TStyleElements(seFont + seClient + seBorder);
+		CompatibilityPnl->StyleElements = TStyleElements(seFont + seClient + seBorder);
+
+		MenuPnl->StyleElements = TStyleElements(seFont);
+		MenuPnl->Color = (TColor)RGB(31, 31, 31);
+	}
 
 	ApplyTranslation(ini);
 
@@ -499,8 +736,28 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 	auto renderer = LowerCase(ini->ReadString("ddraw", "renderer", "auto"));
 
-	if (StartsStr("d", renderer)) {
+	if (renderer == "direct3d9on12") {
+		RendererCbx->AddItem(L"Direct3D 12 (9On12)", NULL);
+		RendererCbx->ItemIndex = 4;
+
+		ShaderLbl->Caption =
+			ReplaceStr(ShaderLbl->Caption, "OpenGL", "Direct3D");
+
+		ShaderD3DCbx->Visible = true;
+		ShaderCbx->Visible = false;
+	}
+	else if (renderer == "openglcore") {
+		RendererCbx->AddItem(L"OpenGL Core", NULL);
+		RendererCbx->ItemIndex = 4;
+	}
+	else if (StartsStr("d", renderer)) {
 		RendererCbx->ItemIndex = 1;
+
+		ShaderLbl->Caption =
+			ReplaceStr(ShaderLbl->Caption, "OpenGL", "Direct3D");
+
+		ShaderD3DCbx->Visible = true;
+		ShaderCbx->Visible = false;
 	}
 	else if (StartsStr("o", renderer)) {
 		RendererCbx->ItemIndex = 2;
@@ -521,12 +778,43 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 		for (int i = 0; i < list.Length; i++)
 			ShaderCbx->AddItem(list[i], NULL);
-
-		auto shader = ini->ReadString("ddraw", "shader", "");
-		ShaderCbx->ItemIndex = ShaderCbx->Items->IndexOf(shader);
 	}
 	catch (...)
 	{
+	}
+
+	if (ShaderCbx->Items->Count == 0) {
+		ShaderCbx->AddItem("Nearest neighbor", NULL);
+		ShaderCbx->AddItem("Bilinear", NULL);
+		ShaderCbx->AddItem("Bicubic", NULL);
+		ShaderCbx->AddItem("Lanczos", NULL);
+		ShaderCbx->AddItem("xBR-lv2", NULL);
+	}
+
+	auto shader = ini->ReadString("ddraw", "shader", "Bicubic");
+	ShaderCbx->ItemIndex = ShaderCbx->Items->IndexOf(shader);
+
+	if (ShaderCbx->ItemIndex == -1) {
+		ShaderCbx->AddItem(shader, NULL);
+		ShaderCbx->ItemIndex = ShaderCbx->Items->Count - 1;
+	}
+
+	int d3d9_filter = ini->ReadInteger("ddraw", "d3d9_filter", 2);
+
+	switch (d3d9_filter) {
+	case 0:
+		ShaderD3DCbx->ItemIndex = 0;
+		break;
+	case 1:
+		ShaderD3DCbx->ItemIndex = 1;
+		break;
+	case 2:
+	default:
+		ShaderD3DCbx->ItemIndex = 2;
+		break;
+	case 3:
+		ShaderD3DCbx->ItemIndex = 3;
+		break;
 	}
 
 	Maxfps = ini->ReadInteger("ddraw", "maxfps", -1);
@@ -537,6 +825,23 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 	Savesettings = ini->ReadInteger("ddraw", "savesettings", 1);
 	SavesettingsChk->State = Savesettings != 0 ? tssOn : tssOff;
+
+	/* Hotkey Settings */
+
+	ToggleWindowedEdt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keytogglefullscreen", 0x0D)));
+
+	MaximizeWindowEdt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keytogglemaximize", 0x22)));
+
+	UnlockCursor1Edt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keyunlockcursor1", 0x09)));
+
+	UnlockCursor2Edt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keyunlockcursor2", 0xA3)));
+
+	ScreenshotEdt->Text =
+		GetKeyText(Byte(ini->ReadInteger("ddraw", "keyscreenshot", 0x2C)));
 
 	/* Compatibility Settings */
 
@@ -558,34 +863,47 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	case 500:
 		MaxgameticksCbx->ItemIndex = 4;
 		break;
-	case 60:
+	case 250:
 		MaxgameticksCbx->ItemIndex = 5;
 		break;
-	case 30:
+	case 125:
 		MaxgameticksCbx->ItemIndex = 6;
 		break;
-	case 25:
+	case 60:
 		MaxgameticksCbx->ItemIndex = 7;
 		break;
-	case 15:
+	case 30:
 		MaxgameticksCbx->ItemIndex = 8;
+		break;
+	case 25:
+		MaxgameticksCbx->ItemIndex = 9;
+		break;
+	case 15:
+		MaxgameticksCbx->ItemIndex = 10;
 		break;
 	default:
 		MaxgameticksCbx->AddItem(IntToStr(maxgameticks), NULL);
-		MaxgameticksCbx->ItemIndex = 9;
+		MaxgameticksCbx->ItemIndex = 11;
 		break;
 	}
 
 	NoactivateappChk->State = GetBool(ini, "noactivateapp", false) ? tssOn : tssOff;
 
-	Hook = ini->ReadInteger("ddraw", "hook", 4);
-	HookChk->State = Hook == 2 ? tssOn : tssOff;
+	Resolutions = ini->ReadInteger("ddraw", "resolutions", 0);
+	ResolutionsChk->State = Resolutions == 2 ? tssOn : tssOff;
 
 	Minfps = ini->ReadInteger("ddraw", "minfps", 0);
 	MinfpsChk->State = Minfps != 0 ? tssOn : tssOff;
 
-	FixpitchChk->State = GetBool(ini, "fixpitch", false) ? tssOn : tssOff;
+	SinglecpuChk->State = GetBool(ini, "singlecpu", true) ? tssOff : tssOn;
 	NonexclusiveChk->State = GetBool(ini, "nonexclusive", false) ? tssOn : tssOff;
+
+	CompatibilityBtn->Visible = !GetBool(ini, "hide_compat_tab", false);
+
+	RestoreDefaultsBtn->Visible =
+		FileExists(".\\ddraw.dll") &&
+		FileExists(".\\dd-hd.ini") &&
+		GetBool(ini, "allow_reset", true);
 
 	delete ini;
 
@@ -597,7 +915,7 @@ void TConfigForm::SaveSettings()
 	if (!Initialized)
 		return;
 
-	auto *ini = new TIniFile(".\\ddraw.ini");
+	auto *ini = new TIniFile(".\\dd-hd.ini");
 
 	/* Display Settings */
 
@@ -605,6 +923,7 @@ void TConfigForm::SaveSettings()
 	case 0:
 		ini->WriteString("ddraw", "windowed", "false");
 		ini->WriteString("ddraw", "fullscreen", "false");
+		ini->WriteString("ddraw", "toggle_borderless", "false");
 		break;
 	case 1:
 		ini->WriteString("ddraw", "windowed", "false");
@@ -613,6 +932,7 @@ void TConfigForm::SaveSettings()
 	case 2:
 		ini->WriteString("ddraw", "windowed", "true");
 		ini->WriteString("ddraw", "fullscreen", "true");
+		ini->WriteString("ddraw", "toggle_borderless", "true");
 		break;
 	case 3:
 		ini->WriteString("ddraw", "windowed", "true");
@@ -657,11 +977,21 @@ void TConfigForm::SaveSettings()
 	case 3:
 		ini->WriteString("ddraw", "renderer", "gdi");
 		break;
+	case 4:
+		if (RendererCbx->Text == "OpenGL Core") {
+			ini->WriteString("ddraw", "renderer", "openglcore");
+		}
+		else {
+			ini->WriteString("ddraw", "renderer", "direct3d9on12");
+		}
+		break;
 	default:
 		break;
 	}
 
 	ini->WriteString("ddraw", "shader", ShaderCbx->Text);
+
+	ini->WriteInteger("ddraw", "d3d9_filter", ShaderD3DCbx->ItemIndex);
 
 	int maxfps = Maxfps == 0 ? -1 : Maxfps;
 
@@ -694,6 +1024,33 @@ void TConfigForm::SaveSettings()
 		ini->WriteInteger("ddraw", "posY", -32000);
 	}
 
+	/* Hotkey Settings */
+
+	ini->WriteString(
+		"ddraw",
+		"keytogglefullscreen",
+		"0x" + IntToHex(Byte(GetKeyCode(ToggleWindowedEdt->Text))));
+
+	ini->WriteString(
+		"ddraw",
+		"keytogglemaximize",
+		"0x" + IntToHex(Byte(GetKeyCode(MaximizeWindowEdt->Text))));
+
+	ini->WriteString(
+		"ddraw",
+		"keyunlockcursor1",
+		"0x" + IntToHex(Byte(GetKeyCode(UnlockCursor1Edt->Text))));
+
+	ini->WriteString(
+		"ddraw",
+		"keyunlockcursor2",
+		"0x" + IntToHex(Byte(GetKeyCode(UnlockCursor2Edt->Text))));
+
+	ini->WriteString(
+		"ddraw",
+		"keyscreenshot",
+		"0x" + IntToHex(Byte(GetKeyCode(ScreenshotEdt->Text))));
+
 	/* Compatibility Settings */
 
 	switch(MaxgameticksCbx->ItemIndex) {
@@ -713,18 +1070,24 @@ void TConfigForm::SaveSettings()
 		ini->WriteInteger("ddraw", "maxgameticks", 500);
 		break;
 	case 5:
-		ini->WriteInteger("ddraw", "maxgameticks", 60);
+		ini->WriteInteger("ddraw", "maxgameticks", 250);
 		break;
 	case 6:
-		ini->WriteInteger("ddraw", "maxgameticks", 30);
+		ini->WriteInteger("ddraw", "maxgameticks", 125);
 		break;
 	case 7:
-		ini->WriteInteger("ddraw", "maxgameticks", 25);
+		ini->WriteInteger("ddraw", "maxgameticks", 60);
 		break;
 	case 8:
-		ini->WriteInteger("ddraw", "maxgameticks", 15);
+		ini->WriteInteger("ddraw", "maxgameticks", 30);
 		break;
 	case 9:
+		ini->WriteInteger("ddraw", "maxgameticks", 25);
+		break;
+	case 10:
+		ini->WriteInteger("ddraw", "maxgameticks", 15);
+		break;
+	case 11:
 		ini->WriteString("ddraw", "maxgameticks", MaxgameticksCbx->Text);
 		break;
 	default:
@@ -736,15 +1099,12 @@ void TConfigForm::SaveSettings()
 		"noactivateapp",
 		NoactivateappChk->State == tssOn ? "true" : "false");
 
-	int hook = Hook != 2 ? Hook : 4;
+	int resolutions = Resolutions != 2 ? Resolutions : 0;
 
 	ini->WriteInteger(
 		"ddraw",
-		"hook",
-		HookChk->State == tssOn ? 2 : hook);
-
-	if (HookChk->State == tssOn && Hook != 2)
-		ini->WriteString("ddraw", "renderer", "gdi");
+		"resolutions",
+		ResolutionsChk->State == tssOn ? 2 : resolutions);
 
 	int minfps = Minfps == 0 ? -1 : Minfps;
 
@@ -755,8 +1115,8 @@ void TConfigForm::SaveSettings()
 
 	ini->WriteString(
 		"ddraw",
-		"fixpitch",
-		FixpitchChk->State == tssOn ? "true" : "false");
+		"singlecpu",
+		SinglecpuChk->State == tssOn ? "false" : "true");
 
 	ini->WriteString(
 		"ddraw",
@@ -764,6 +1124,110 @@ void TConfigForm::SaveSettings()
 		NonexclusiveChk->State == tssOn ? "true" : "false");
 
 	delete ini;
+}
+
+void __fastcall TConfigForm::FormActivate(TObject *Sender)
+{
+	/* Detect wine (Linux/macOS) and create the needed dll override */
+	if (!GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "wine_get_version"))
+		return;
+
+	TRegistry* reg = new TRegistry(KEY_READ);
+	reg->RootKey = HKEY_CURRENT_USER;
+
+	if (reg->OpenKey("Software\\Wine\\DllOverrides\\", true)) {
+
+		if (!reg->ValueExists("ddraw")) {
+
+			reg->CloseKey();
+
+			if (Application->MessageBox(
+				L"cnc-ddraw requires a dll override in winecfg, "
+					"would you like to add it now?",
+				L"cnc-ddraw",
+				MB_YESNO) == IDNO) {
+
+				reg->Free();
+				return;
+			}
+
+			reg->Access = KEY_WRITE;
+
+			if (reg->OpenKey("Software\\Wine\\DllOverrides\\", true)) {
+
+				reg->WriteString("ddraw", "native,builtin");
+				reg->CloseKey();
+			}
+		}
+		else
+			reg->CloseKey();
+	}
+
+	reg->Free();
+}
+
+void __fastcall TConfigForm::HotkeyEdtKeyDown(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	TEdit *edit = static_cast<TEdit*>(Sender);
+
+	if (Key == VK_DELETE || Key == VK_BACK) {
+		edit->Text = L"";
+	}
+	else if (GetAsyncKeyState(VK_RCONTROL) & 0x8000) {
+		edit->Text = GetKeyText(VK_RCONTROL);
+	}
+	else {
+		edit->Text = GetKeyText(Key);
+	}
+}
+
+void __fastcall TConfigForm::HotkeyEdtKeyUp(TObject *Sender, WORD &Key, TShiftState Shift)
+{
+	TEdit *edit = static_cast<TEdit*>(Sender);
+
+	if (Key == VK_SNAPSHOT || Key == VK_TAB) {
+		edit->Text = GetKeyText(Key);
+	}
+
+	SaveSettings();
+}
+
+WORD TConfigForm::GetKeyCode(System::UnicodeString key)
+{
+	if (key == L"PrtScn") {
+		return VK_SNAPSHOT;
+	}
+
+	if (key == L"Pause_") {
+		return VK_PAUSE;
+	}
+
+	if (key == L"R " + ShortCutToText(VK_CONTROL)) {
+		return VK_RCONTROL;
+	}
+
+	return TextToShortCut(key);
+}
+
+System::UnicodeString TConfigForm::GetKeyText(WORD key)
+{
+	if (key == VK_SNAPSHOT) {
+		return L"PrtScn";
+	}
+
+	if (key == VK_PAUSE) {
+		return L"Pause_";
+	}
+
+	if (key == VK_RCONTROL) {
+		return L"R " + ShortCutToText(VK_CONTROL);
+	}
+
+	if (key == VK_RSHIFT) {
+		return ShortCutToText(VK_SHIFT);
+	}
+
+	return ShortCutToText(key);
 }
 
 bool TConfigForm::GetBool(TIniFile *ini, System::UnicodeString key, bool defValue)
@@ -799,12 +1263,36 @@ void __fastcall TConfigForm::DevmodeChkClick(TObject *Sender)
 
 void __fastcall TConfigForm::RendererCbxChange(TObject *Sender)
 {
+	if (ContainsStr(RendererCbx->Text, "Direct3D")) {
+
+		ShaderLbl->Caption =
+			ReplaceStr(ShaderLbl->Caption, "OpenGL", "Direct3D");
+
+		ShaderD3DCbx->Visible = true;
+		ShaderCbx->Visible = false;
+	}
+	else {
+		ShaderLbl->Caption =
+			ReplaceStr(ShaderLbl->Caption, "Direct3D", "OpenGL");
+
+		ShaderCbx->Visible = true;
+		ShaderD3DCbx->Visible = false;
+	}
+
 	SaveSettings();
 }
 
 void __fastcall TConfigForm::ShaderCbxChange(TObject *Sender)
 {
-	RendererCbx->ItemIndex = 2;
+	if (RendererCbx->Text != "OpenGL Core") {
+		RendererCbx->ItemIndex = 2;
+	}
+
+	SaveSettings();
+}
+
+void __fastcall TConfigForm::ShaderD3DCbxChange(TObject *Sender)
+{
 	SaveSettings();
 }
 
@@ -838,7 +1326,7 @@ void __fastcall TConfigForm::NoactivateappChkClick(TObject *Sender)
 	SaveSettings();
 }
 
-void __fastcall TConfigForm::HookChkClick(TObject *Sender)
+void __fastcall TConfigForm::ResolutionsChkClick(TObject *Sender)
 {
 	SaveSettings();
 }
@@ -848,7 +1336,7 @@ void __fastcall TConfigForm::MinfpsChkClick(TObject *Sender)
 	SaveSettings();
 }
 
-void __fastcall TConfigForm::FixpitchChkClick(TObject *Sender)
+void __fastcall TConfigForm::SinglecpuChkClick(TObject *Sender)
 {
 	SaveSettings();
 }
@@ -861,6 +1349,6 @@ void __fastcall TConfigForm::NonexclusiveChkClick(TObject *Sender)
 void __fastcall TConfigForm::PboxPaint(TObject *Sender)
 {
 	TPaintBox *pbox = static_cast<TPaintBox*>(Sender);
-	pbox->Canvas->Rectangle(pbox->ClientRect);
+	//pbox->Canvas->Rectangle(pbox->ClientRect);
 }
 

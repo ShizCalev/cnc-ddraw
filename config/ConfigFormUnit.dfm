@@ -4,9 +4,9 @@ object ConfigForm: TConfigForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'cnc-ddraw config'
-  ClientHeight = 475
-  ClientWidth = 708
-  Color = clBlack
+  ClientHeight = 476
+  ClientWidth = 741
+  Color = clMenu
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -2677,16 +2677,397 @@ object ConfigForm: TConfigForm
     61C0650530766087F0B9DE67A1EF3B173173597F3B695CC608E0B202F8FC22D7
     BBBF4CD8CBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCBB88CCB
     B88CB18EFF1FA2974C1C31AF16A40000000049454E44AE426082}
-  OldCreateOrder = False
   Position = poDesktopCenter
+  OnActivate = FormActivate
   OnCreate = FormCreate
-  PixelsPerInch = 96
+  DesignSize = (
+    741
+    476)
   TextHeight = 13
-  object AdvancedPnl: TPanel
-    Left = 201
+  object DisplayPnl: TPanel
+    Left = 233
     Top = 8
     Width = 499
     Height = 465
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    BevelOuter = bvNone
+    Color = clWhite
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 1
+    StyleElements = [seFont, seBorder]
+    ExplicitWidth = 495
+    ExplicitHeight = 464
+    DesignSize = (
+      499
+      465)
+    object PresentationLbl: TLabel
+      Left = 40
+      Top = 28
+      Width = 87
+      Height = 21
+      Caption = 'Presentation'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object MaintasLbl: TLabel
+      Left = 40
+      Top = 105
+      Width = 145
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Maintain aspect ratio'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object VsyncLbl: TLabel
+      Left = 40
+      Top = 173
+      Width = 93
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Enable VSync'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object AdjmouseLbl: TLabel
+      Left = 40
+      Top = 241
+      Width = 168
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Adjust mouse sensitivity'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object DevmodeLbl: TLabel
+      Left = 40
+      Top = 309
+      Width = 216
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Lock cursor to window / screen'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object PresentationPbox: TPaintBox
+      Left = 40
+      Top = 54
+      Width = 282
+      Height = 31
+      OnPaint = PboxPaint
+    end
+    object LanguageImg: TImage
+      Left = 453
+      Top = 8
+      Width = 16
+      Height = 11
+      Anchors = [akTop, akRight]
+      Picture.Data = {
+        0954506E67496D61676589504E470D0A1A0A0000000D49484452000000100000
+        000B0802000000F9809A6E0000000467414D410000AFC837058AE90000001974
+        455874536F6674776172650041646F626520496D616765526561647971C9653C
+        000001B34944415478DA4D51DF4B5451109EB3B95010813E583ED8D28B7F8356
+        6A1A2BD5530F81AE108837E9414390681F841235FF00115C0A5A82AD1E7C1172
+        B7A050597C102C05E5C2222CE5A2D8522CABBBDD7BEEF935CE5DF1E2F031F30D
+        C37C67660EB39EAE4160C68051000200C9BF897C47E7FFBFBF7F283735508D51
+        C3DBF9B65416639DE6E34AA8BF1DDF67D9E3DB2AB95A37D8A51101D12005F049
+        26B3E03774C65A3F658D3640100A35FA842BFC09E3502AC3F111542BE038ACFF
+        7EEEC71A35AC74F4B6F7DDD23DAF59262EA3D375E917CE9DE94B3683D24B61CE
+        ACBE7ED475E76D7B8B5943D98ED8CDE432BDE06B2B091EA20D9E7236D4E11C09
+        43B58A9C8310A1C187EBF626B3ACAF89C4DDEE576629CEA35317D3F1E36B33E2
+        F798691ED92E25DB4EE56907F2E5AB8D797F07EB4B6B5FF4DD374DC246C20E16
+        B597833D0D05ADAECCF8DA9E4720121AEEFD9CCFB14221DFD4745D4A19289D27
+        01775DF74618E616534C4F3E63F71E617A198B45289769621F9C234D2F040644
+        CA0BCF073EECFF62BBBB3B91484B251CBE2C7870F5F3A694E4BC01605F6BD330
+        3BC10E9E3CA0E3041F0967840354009C1A642D3DAD9E00C53A4C480864283400
+        00000049454E44AE426082}
+      Stretch = True
+      Visible = False
+      OnClick = LanguageImgClick
+    end
+    object PresentationCbx: TComboBox
+      Left = 41
+      Top = 55
+      Width = 280
+      Height = 29
+      BevelEdges = []
+      BevelInner = bvNone
+      BevelOuter = bvSpace
+      Style = csDropDownList
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      OnChange = PresentationCbxChange
+      Items.Strings = (
+        'Fullscreen'
+        'Fullscreen Upscaled'
+        'Borderless'
+        'Windowed')
+    end
+    object MaintasChk: TToggleSwitch
+      Left = 40
+      Top = 132
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 0
+      OnClick = MaintasChkClick
+    end
+    object VsyncChk: TToggleSwitch
+      Left = 40
+      Top = 200
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 2
+      OnClick = VsyncChkClick
+    end
+    object AdjmouseChk: TToggleSwitch
+      Left = 40
+      Top = 268
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 3
+      OnClick = AdjmouseChkClick
+    end
+    object DevmodeChk: TToggleSwitch
+      Left = 40
+      Top = 336
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 4
+      OnClick = DevmodeChkClick
+    end
+    object ThemePnl: TPanel
+      Left = 475
+      Top = 8
+      Width = 16
+      Height = 11
+      Anchors = [akTop, akRight]
+      BevelOuter = bvNone
+      Color = 2039583
+      ParentBackground = False
+      TabOrder = 5
+      StyleElements = [seFont, seBorder]
+      OnClick = ThemePnlClick
+      ExplicitLeft = 471
+    end
+  end
+  object CompatibilityPnl: TPanel
+    Left = 233
+    Top = 8
+    Width = 499
+    Height = 465
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    BevelOuter = bvNone
+    Color = clWhite
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 3
+    Visible = False
+    StyleElements = [seFont, seBorder]
+    ExplicitWidth = 495
+    ExplicitHeight = 464
+    object MaxgameticksLbl: TLabel
+      Left = 40
+      Top = 28
+      Width = 123
+      Height = 21
+      Caption = 'Limit game speed'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object NoactivateappLbl: TLabel
+      Left = 40
+      Top = 105
+      Width = 129
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Fix broken Alt+Tab'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object ResolutionsLbl: TLabel
+      Left = 40
+      Top = 173
+      Width = 251
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Unlock additional screen resolutions'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object MinfpsLbl: TLabel
+      Left = 40
+      Top = 241
+      Width = 350
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Force high FPS / Fix stuttering on Freesync/G-Sync'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object SinglecpuLbl: TLabel
+      Left = 40
+      Top = 309
+      Width = 265
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Fix bad performance and sound issues'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object NonexclusiveLbl: TLabel
+      Left = 40
+      Top = 377
+      Width = 225
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Fix invisible videos / UI elements'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object MaxgameticksPbox: TPaintBox
+      Left = 40
+      Top = 54
+      Width = 394
+      Height = 31
+      OnPaint = PboxPaint
+    end
+    object MaxgameticksCbx: TComboBox
+      Left = 41
+      Top = 55
+      Width = 392
+      Height = 29
+      BevelEdges = []
+      BevelInner = bvNone
+      BevelOuter = bvSpace
+      Style = csDropDownList
+      DropDownCount = 12
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      OnChange = MaxgameticksCbxChange
+      Items.Strings = (
+        'No limit'
+        'Sync with monitor refresh rate'
+        'Emulate 60hz refresh rate monitor'
+        '1000 ticks per second'
+        '500 ticks per second'
+        '250 ticks per second'
+        '125 ticks per second'
+        '60 ticks per second'
+        '30 ticks per second'
+        '25 ticks per second'
+        '15 ticks per second')
+    end
+    object NoactivateappChk: TToggleSwitch
+      Left = 40
+      Top = 132
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 1
+      OnClick = NoactivateappChkClick
+    end
+    object ResolutionsChk: TToggleSwitch
+      Left = 40
+      Top = 200
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 2
+      OnClick = ResolutionsChkClick
+    end
+    object MinfpsChk: TToggleSwitch
+      Left = 40
+      Top = 268
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 3
+      OnClick = MinfpsChkClick
+    end
+    object SinglecpuChk: TToggleSwitch
+      Left = 40
+      Top = 336
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 4
+      OnClick = SinglecpuChkClick
+    end
+    object NonexclusiveChk: TToggleSwitch
+      Left = 40
+      Top = 404
+      Width = 50
+      Height = 20
+      ShowStateCaption = False
+      TabOrder = 5
+      OnClick = NonexclusiveChkClick
+    end
+  end
+  object AdvancedPnl: TPanel
+    Left = 233
+    Top = 8
+    Width = 499
+    Height = 465
+    Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
     ParentBackground = False
@@ -2694,6 +3075,8 @@ object ConfigForm: TConfigForm
     TabOrder = 2
     Visible = False
     StyleElements = [seFont, seBorder]
+    ExplicitWidth = 495
+    ExplicitHeight = 464
     object RendererLbl: TLabel
       Left = 40
       Top = 28
@@ -2706,7 +3089,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object SavesettingsLbl: TLabel
       Left = 40
@@ -2721,7 +3103,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object ShaderLbl: TLabel
       Left = 40
@@ -2736,7 +3117,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object MaxfpsLbl: TLabel
       Left = 40
@@ -2751,7 +3131,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object BorderLbl: TLabel
       Left = 40
@@ -2766,7 +3145,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object BoxingLbl: TLabel
       Left = 40
@@ -2781,7 +3159,6 @@ object ConfigForm: TConfigForm
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
     object RendererPbox: TPaintBox
       Left = 40
@@ -2796,6 +3173,31 @@ object ConfigForm: TConfigForm
       Width = 427
       Height = 31
       OnPaint = PboxPaint
+    end
+    object ShaderD3DCbx: TComboBox
+      Left = 41
+      Top = 132
+      Width = 425
+      Height = 29
+      BevelEdges = []
+      BevelInner = bvNone
+      BevelOuter = bvSpace
+      Style = csDropDownList
+      DropDownCount = 10
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 6
+      Visible = False
+      OnChange = ShaderD3DCbxChange
+      Items.Strings = (
+        'Nearest neighbor'
+        'Bilinear'
+        'Bicubic (Catmull-Rom)'
+        'Lanczos')
     end
     object RendererCbx: TComboBox
       Left = 41
@@ -2876,434 +3278,331 @@ object ConfigForm: TConfigForm
       OnClick = BoxingChkClick
     end
   end
-  object DisplayPnl: TPanel
-    Left = 201
+  object HotkeyPnl: TPanel
+    Left = 233
     Top = 8
     Width = 499
     Height = 465
+    Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
     ParentBackground = False
     ShowCaption = False
-    TabOrder = 1
-    StyleElements = [seFont, seBorder]
-    DesignSize = (
-      499
-      465)
-    object PresentationLbl: TLabel
-      Left = 40
-      Top = 28
-      Width = 87
-      Height = 21
-      Caption = 'Presentation'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ParentFont = False
-      StyleElements = [seClient, seBorder]
-    end
-    object MaintasLbl: TLabel
-      Left = 40
-      Top = 105
-      Width = 145
-      Height = 21
-      Margins.Top = 18
-      Caption = 'Maintain aspect ratio'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ParentFont = False
-      StyleElements = [seClient, seBorder]
-    end
-    object VsyncLbl: TLabel
-      Left = 40
-      Top = 173
-      Width = 93
-      Height = 21
-      Margins.Top = 18
-      Caption = 'Enable VSync'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ParentFont = False
-      StyleElements = [seClient, seBorder]
-    end
-    object AdjmouseLbl: TLabel
-      Left = 40
-      Top = 241
-      Width = 168
-      Height = 21
-      Margins.Top = 18
-      Caption = 'Adjust mouse sensitivity'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ParentFont = False
-      StyleElements = [seClient, seBorder]
-    end
-    object DevmodeLbl: TLabel
-      Left = 40
-      Top = 309
-      Width = 216
-      Height = 21
-      Margins.Top = 18
-      Caption = 'Lock cursor to window / screen'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ParentFont = False
-      StyleElements = [seClient, seBorder]
-    end
-    object PresentationPbox: TPaintBox
-      Left = 40
-      Top = 54
-      Width = 282
-      Height = 31
-      OnPaint = PboxPaint
-    end
-    object LanguageImg: TImage
-      Left = 477
-      Top = 8
-      Width = 16
-      Height = 11
-      Anchors = [akTop, akRight]
-      Picture.Data = {
-        0954506E67496D61676589504E470D0A1A0A0000000D49484452000000100000
-        000B0802000000F9809A6E0000000467414D410000AFC837058AE90000001974
-        455874536F6674776172650041646F626520496D616765526561647971C9653C
-        000001B34944415478DA4D51DF4B5451109EB3B95010813E583ED8D28B7F8356
-        6A1A2BD5530F81AE108837E9414390681F841235FF00115C0A5A82AD1E7C1172
-        B7A050597C102C05E5C2222CE5A2D8522CABBBDD7BEEF935CE5DF1E2F031F30D
-        C37C67660EB39EAE4160C68051000200C9BF897C47E7FFBFBF7F283735508D51
-        C3DBF9B65416639DE6E34AA8BF1DDF67D9E3DB2AB95A37D8A51101D12005F049
-        26B3E03774C65A3F658D3640100A35FA842BFC09E3502AC3F111542BE038ACFF
-        7EEEC71A35AC74F4B6F7DDD23DAF59262EA3D375E917CE9DE94B3683D24B61CE
-        ACBE7ED475E76D7B8B5943D98ED8CDE432BDE06B2B091EA20D9E7236D4E11C09
-        43B58A9C8310A1C187EBF626B3ACAF89C4DDEE576629CEA35317D3F1E36B33E2
-        F798691ED92E25DB4EE56907F2E5AB8D797F07EB4B6B5FF4DD374DC246C20E16
-        B597833D0D05ADAECCF8DA9E4720121AEEFD9CCFB14221DFD4745D4A19289D27
-        01775DF74618E616534C4F3E63F71E617A198B45289769621F9C234D2F040644
-        CA0BCF073EECFF62BBBB3B91484B251CBE2C7870F5F3A694E4BC01605F6BD330
-        3BC10E9E3CA0E3041F0967840354009C1A642D3DAD9E00C53A4C480864283400
-        00000049454E44AE426082}
-      Stretch = True
-      Visible = False
-      OnClick = LanguageImgClick
-      ExplicitLeft = 569
-    end
-    object PresentationCbx: TComboBox
-      Left = 41
-      Top = 55
-      Width = 280
-      Height = 29
-      BevelEdges = []
-      BevelInner = bvNone
-      BevelOuter = bvSpace
-      Style = csDropDownList
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 1
-      OnChange = PresentationCbxChange
-      Items.Strings = (
-        'Fullscreen'
-        'Fullscreen Upscaled'
-        'Borderless'
-        'Windowed')
-    end
-    object MaintasChk: TToggleSwitch
-      Left = 40
-      Top = 132
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
-      TabOrder = 0
-      OnClick = MaintasChkClick
-    end
-    object VsyncChk: TToggleSwitch
-      Left = 40
-      Top = 200
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
-      TabOrder = 2
-      OnClick = VsyncChkClick
-    end
-    object AdjmouseChk: TToggleSwitch
-      Left = 40
-      Top = 268
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
-      TabOrder = 3
-      OnClick = AdjmouseChkClick
-    end
-    object DevmodeChk: TToggleSwitch
-      Left = 40
-      Top = 336
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
-      TabOrder = 4
-      OnClick = DevmodeChkClick
-    end
-  end
-  object CompatibilityPnl: TPanel
-    Left = 201
-    Top = 8
-    Width = 499
-    Height = 465
-    BevelOuter = bvNone
-    Color = clWhite
-    ParentBackground = False
-    ShowCaption = False
-    TabOrder = 3
+    TabOrder = 4
     Visible = False
     StyleElements = [seFont, seBorder]
-    object MaxgameticksLbl: TLabel
+    ExplicitWidth = 495
+    ExplicitHeight = 464
+    object ToggleWindowedLbl: TLabel
       Left = 40
-      Top = 28
-      Width = 123
-      Height = 21
-      Caption = 'Limit game speed'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -16
-      Font.Name = 'Segoe UI'
-      Font.Style = []
-      ParentFont = False
-      StyleElements = [seClient, seBorder]
-    end
-    object NoactivateappLbl: TLabel
-      Left = 40
-      Top = 105
-      Width = 129
+      Top = 27
+      Width = 165
       Height = 21
       Margins.Top = 18
-      Caption = 'Fix broken Alt+Tab'
+      Caption = 'Toggle windowed mode'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
-    object HookLbl: TLabel
+    object ToggleWindowedKeyLbl: TLabel
+      Left = 50
+      Top = 60
+      Width = 34
+      Height = 21
+      Margins.Top = 8
+      Caption = 'Alt +'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object MaximizeWindowLbl: TLabel
       Left = 40
-      Top = 173
-      Width = 281
+      Top = 107
+      Width = 125
       Height = 21
       Margins.Top = 18
-      Caption = 'Fix broken windowed mode or upscaling'
+      Caption = 'Maximize window'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
-    object MinfpsLbl: TLabel
+    object MaximizeWindowKeyLbl: TLabel
+      Left = 50
+      Top = 139
+      Width = 34
+      Height = 21
+      Margins.Top = 8
+      Caption = 'Alt +'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object UnlockCursor1Lbl: TLabel
       Left = 40
-      Top = 241
-      Width = 350
+      Top = 186
+      Width = 109
       Height = 21
       Margins.Top = 18
-      Caption = 'Force high FPS / Fix stuttering on Freesync/G-Sync'
+      Caption = 'Unlock cursor 1'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
-    object FixpitchLbl: TLabel
+    object UnlockCursor1KeyLbl: TLabel
+      Left = 50
+      Top = 218
+      Width = 40
+      Height = 21
+      Margins.Top = 8
+      Caption = 'Ctrl +'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object UnlockCursor2Lbl: TLabel
       Left = 40
-      Top = 309
-      Width = 272
+      Top = 265
+      Width = 109
       Height = 21
       Margins.Top = 18
-      Caption = 'Fix diagonally displayed drawing issues'
+      Caption = 'Unlock cursor 2'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
-    object NonexclusiveLbl: TLabel
-      Left = 40
-      Top = 377
-      Width = 225
+    object UnlockCursor2KeyLbl: TLabel
+      Left = 50
+      Top = 297
+      Width = 48
       Height = 21
-      Margins.Top = 18
-      Caption = 'Fix invisible videos / UI elements'
+      Margins.Top = 8
+      Caption = 'R Alt +'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
-      StyleElements = [seClient, seBorder]
     end
-    object MaxgameticksPbox: TPaintBox
-      Left = 40
-      Top = 54
-      Width = 394
-      Height = 31
-      OnPaint = PboxPaint
-    end
-    object MaxgameticksCbx: TComboBox
+    object ScreenshotLbl: TLabel
       Left = 41
-      Top = 55
-      Width = 392
-      Height = 29
-      BevelEdges = []
-      BevelInner = bvNone
-      BevelOuter = bvSpace
-      Style = csDropDownList
-      DropDownCount = 10
+      Top = 344
+      Width = 77
+      Height = 21
+      Margins.Top = 18
+      Caption = 'Screenshot'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = []
       ParentFont = False
+    end
+    object ToggleWindowedEdt: TEdit
+      Left = 137
+      Top = 57
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
       TabOrder = 0
-      OnChange = MaxgameticksCbxChange
-      Items.Strings = (
-        'No limit'
-        'Sync with monitor refresh rate'
-        'Emulate 60hz refresh rate monitor'
-        '1000 ticks per second'
-        '500 ticks per second'
-        '60 ticks per second'
-        '30 ticks per second'
-        '25 ticks per second'
-        '15 ticks per second')
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
     end
-    object NoactivateappChk: TToggleSwitch
-      Left = 40
-      Top = 132
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
+    object MaximizeWindowEdt: TEdit
+      Left = 137
+      Top = 136
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
       TabOrder = 1
-      OnClick = NoactivateappChkClick
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
     end
-    object HookChk: TToggleSwitch
-      Left = 40
-      Top = 200
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
+    object UnlockCursor1Edt: TEdit
+      Left = 137
+      Top = 215
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
       TabOrder = 2
-      OnClick = HookChkClick
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
     end
-    object MinfpsChk: TToggleSwitch
-      Left = 40
-      Top = 268
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
+    object UnlockCursor2Edt: TEdit
+      Left = 137
+      Top = 294
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
       TabOrder = 3
-      OnClick = MinfpsChkClick
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
     end
-    object FixpitchChk: TToggleSwitch
-      Left = 40
-      Top = 336
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
+    object ScreenshotEdt: TEdit
+      Left = 137
+      Top = 373
+      Width = 217
+      Height = 29
+      Margins.Top = 5
+      TabStop = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
       TabOrder = 4
-      OnClick = FixpitchChkClick
-    end
-    object NonexclusiveChk: TToggleSwitch
-      Left = 40
-      Top = 404
-      Width = 50
-      Height = 20
-      ShowStateCaption = False
-      TabOrder = 5
-      OnClick = NonexclusiveChkClick
+      OnKeyDown = HotkeyEdtKeyDown
+      OnKeyUp = HotkeyEdtKeyUp
     end
   end
   object MenuPnl: TPanel
     Left = 0
     Top = 8
-    Width = 201
-    Height = 465
+    Width = 233
+    Height = 468
+    Anchors = [akLeft, akTop, akBottom]
     BevelOuter = bvNone
-    Color = clBlack
+    Color = clMenu
     ParentBackground = False
     TabOrder = 0
+    ExplicitHeight = 467
     DesignSize = (
-      201
-      465)
+      233
+      468)
     object DisplayBtn: TSpeedButton
-      Left = 5
+      Left = 0
       Top = 8
-      Width = 187
+      Width = 227
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Display Settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
+      Font.Color = clBlack
+      Font.Height = -16
       Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
+      Font.Style = []
       ParentFont = False
-      StyleElements = [seFont, seBorder]
       OnClick = DisplayBtnClick
     end
     object AdvancedBtn: TSpeedButton
-      Left = 5
+      Left = 0
       Top = 55
-      Width = 187
+      Width = 227
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Advanced Settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
+      Font.Color = clBlack
+      Font.Height = -16
       Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
+      Font.Style = []
       ParentFont = False
       OnClick = AdvancedBtnClick
     end
     object CompatibilityBtn: TSpeedButton
-      Left = 5
-      Top = 102
-      Width = 187
+      Left = 0
+      Top = 149
+      Width = 227
       Height = 41
       Anchors = [akLeft, akTop, akRight]
       Caption = 'Compatibility Settings'
       Flat = True
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
+      Font.Color = clBlack
+      Font.Height = -16
       Font.Name = 'Segoe UI'
-      Font.Style = [fsBold]
+      Font.Style = []
       ParentFont = False
       OnClick = CompatibilityBtnClick
+    end
+    object HotkeyBtn: TSpeedButton
+      Left = 0
+      Top = 102
+      Width = 227
+      Height = 41
+      Anchors = [akLeft, akTop, akRight]
+      Caption = 'Hotkey Settings'
+      Flat = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      OnClick = HotkeyBtnClick
+    end
+    object RestoreDefaultsBtn: TSpeedButton
+      Left = 0
+      Top = 440
+      Width = 227
+      Height = 22
+      Anchors = [akLeft, akRight, akBottom]
+      Caption = 'Restore default settings'
+      Flat = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      OnClick = RestoreDefaultsBtnClick
     end
   end
 end

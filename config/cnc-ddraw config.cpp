@@ -2,6 +2,8 @@
 
 #include <vcl.h>
 #pragma hdrstop
+#include <IniFiles.hpp>
+#include <System.Hash.hpp>
 #include <tchar.h>
 //---------------------------------------------------------------------------
 #include <Vcl.Styles.hpp>
@@ -14,7 +16,29 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 	{
 		Application->Initialize();
 		Application->MainFormOnTaskBar = true;
-		TStyleManager::TrySetStyle("Windows10 Blue");
+
+		HWND hwnd =
+			FindWindow(
+				THashSHA1::GetHashString(Application->ExeName).w_str(), NULL);
+
+		if (hwnd && ParamStr(1) != L"-restart") {
+
+			if (IsIconic(hwnd)) {
+				ShowWindow(hwnd, SW_RESTORE);
+			}
+
+			SetForegroundWindow(hwnd);
+			return 0;
+		}
+
+		auto *ini = new TIniFile(".\\dd-hd.ini");
+		auto theme = ini->ReadString("ddraw", "configtheme", "Windows10");
+
+		TStyleManager::TrySetStyle(
+			theme == "Cobalt XEMedia" ? "Cobalt XEMedia" : "Windows10");
+
+		delete ini;
+
 		Application->CreateForm(__classid(TConfigForm), &ConfigForm);
 		Application->Run();
 	}
