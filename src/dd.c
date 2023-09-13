@@ -1178,6 +1178,9 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
 
 HRESULT dd_WaitForVerticalBlank(DWORD dwFlags, HANDLE hEvent)
 {
+    Sleep(5);
+    return DD_OK;
+
     if (g_ddraw->maxgameticks == -2)
     {
         if (fpsl_dwm_flush() || fpsl_wait_for_vblank(g_ddraw->render.maxfps >= 0 && !g_ddraw->vsync))
