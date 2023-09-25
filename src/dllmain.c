@@ -9,6 +9,7 @@
 #include "debug.h"
 #include "config.h"
 #include "hook.h"
+#include "patch.h"
 
 
 /* export for cncnet cnc games */
@@ -37,6 +38,56 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
         g_dbg_exception_filter = real_SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)dbg_exception_handler);
 #endif
         g_ddraw_module = hDll;
+
+
+
+        /* Claw DVD Movie experiments */
+
+        /* change file extension .vob to .avi */
+        HMODULE game_exe = GetModuleHandleA(NULL);
+
+        PIMAGE_DOS_HEADER dos_hdr = (void*)game_exe;
+        PIMAGE_NT_HEADERS nt_hdr = (void*)((char*)game_exe + dos_hdr->e_lfanew);
+
+        for (int i = 0; i < nt_hdr->FileHeader.NumberOfSections; i++)
+        {
+            PIMAGE_SECTION_HEADER sct_hdr = IMAGE_FIRST_SECTION(nt_hdr) + i;
+
+            if (strcmp(".data", (char*)sct_hdr->Name) == 0)
+            {
+                char* s = (char*)((char*)game_exe + sct_hdr->VirtualAddress);
+                int s_len = sct_hdr->Misc.VirtualSize;
+
+                for (int i = 0; i < s_len; i++, s++)
+                {
+                    if (*s == '.' && memcmp(s, "\x2E\x76\x6F\x62\x00", 5) == 0) /* .vob */
+                    {
+                        memcpy(s, "\x2E\x61\x76\x69", 4);  /* .avi */
+                    }
+                }
+
+                break;
+            }
+            sct_hdr++;
+        }
+
+        /* add registry key for x264vfw */
+
+        HKEY hkey;
+        LONG status =
+            RegOpenKeyExA(
+                HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0L, KEY_WRITE, &hkey);
+
+        if (status == ERROR_SUCCESS)
+        {
+            LPCTSTR data = "x264vfw.dll";
+            RegSetValueExA(hkey,"vidc.x264", 0, REG_SZ, data, strlen(data)+1);
+            RegCloseKey(hkey);
+        }
+
+
+
+
 
         char buf[1024];
 
