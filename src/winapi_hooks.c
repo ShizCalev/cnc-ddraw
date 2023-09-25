@@ -738,9 +738,11 @@ BOOL WINAPI fake_StretchBlt(
             (g_config.fixchilds && IsChild(g_ddraw->hwnd, hwnd) &&
                 (g_config.fixchilds == FIX_CHILDS_DETECT_HIDE ||
                     strcmp(class_name, "AVIWnd32") == 0 ||
+                    strcmp(class_name, "Afx:400000:3") == 0 ||
+                    strcmp(class_name, "VideoRenderer") == 0 ||
                     strcmp(class_name, "MCIWndClass") == 0))))
     {
-        if (g_ddraw->primary && (g_ddraw->primary->bpp == 16 || g_ddraw->primary->bpp == 32 || g_ddraw->primary->palette))
+        if (0)//g_ddraw->primary && (g_ddraw->primary->bpp == 16 || g_ddraw->primary->bpp == 32 || g_ddraw->primary->palette))
         {
             HDC primary_dc;
             dds_GetDC(g_ddraw->primary, &primary_dc);
@@ -1190,22 +1192,14 @@ HWND WINAPI fake_CreateWindowExA(
     DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y,
     int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
 {
-    /* Center Claw DVD movies */
-    if (HIWORD(lpClassName) &&
-        _strcmpi(lpClassName, "Afx:400000:3") == 0 &&
-        g_ddraw && g_ddraw->hwnd && g_ddraw->width &&
+    /* Claw DVD movies */
+    if (HIWORD(lpClassName) && _strcmpi(lpClassName, "Afx:400000:3") == 0 && 
+        g_ddraw && g_ddraw->hwnd &&
         (dwStyle & (WS_POPUP | WS_CHILD)) == (WS_POPUP | WS_CHILD))
     {
-        POINT pt = { 0, 0 };
-        real_ClientToScreen(g_ddraw->hwnd, &pt);
-
-        int added_height = g_ddraw->render.height - g_ddraw->height;
-        int added_width = g_ddraw->render.width - g_ddraw->width;
-        int align_y = added_height > 0 ? added_height / 2 : 0;
-        int align_x = added_width > 0 ? added_width / 2 : 0;
-
-        X = pt.x + align_x;
-        Y = pt.y + align_y;
+        dwStyle &= ~WS_POPUP;
+        LoadLibraryA("quartz.dll");
+        hook_init(FALSE);
     }
 
     /* Fix for SMACKW32.DLL creating another window that steals the focus */
