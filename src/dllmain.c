@@ -75,8 +75,16 @@ BOOL WINAPI DllMain(HANDLE hDll, DWORD dwReason, LPVOID lpReserved)
 
         HKEY hkey;
         LONG status =
-            RegOpenKeyExA(
-                HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0L, KEY_WRITE, &hkey);
+            RegCreateKeyExA(
+                HKEY_CURRENT_USER,
+                "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32",
+                0,
+                NULL,
+                REG_OPTION_NON_VOLATILE,
+                KEY_WRITE | KEY_QUERY_VALUE,
+                NULL,
+                &hkey,
+                NULL);
 
         if (status == ERROR_SUCCESS)
         {
