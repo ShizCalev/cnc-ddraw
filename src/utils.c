@@ -481,16 +481,6 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
             if (!(style & WS_EX_TRANSPARENT))
             {
                 real_SetWindowLongA(hwnd, GWL_EXSTYLE, style | WS_EX_TRANSPARENT);
-
-                real_SetWindowPos(
-                    hwnd,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER
-                );
             }
         }
         else
