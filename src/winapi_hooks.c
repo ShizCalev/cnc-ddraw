@@ -1199,6 +1199,7 @@ HWND WINAPI fake_CreateWindowExA(
     {
         dwStyle &= ~WS_POPUP;
         LoadLibraryA("quartz.dll");
+        LoadLibraryA("MSVFW32.dll");
         hook_init(FALSE);
     }
 
