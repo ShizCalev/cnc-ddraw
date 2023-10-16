@@ -755,6 +755,11 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_RBUTTONUP:
     case WM_MBUTTONUP:
     {
+        if (g_ddraw->video_window_exists)
+        {
+                return 0;
+        }
+
         if (!g_config.devmode && !g_mouse_locked)
         {
             int x = GET_X_LPARAM(lParam);
@@ -796,6 +801,11 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_MBUTTONDOWN:
     case WM_MOUSEMOVE:
     {
+        if (g_ddraw->video_window_exists)
+        {
+            return 0;
+        }
+
         if (!g_config.devmode && !g_mouse_locked)
         {
             return 0;
