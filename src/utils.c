@@ -476,6 +476,8 @@ BOOL CALLBACK util_enum_child_proc(HWND hwnd, LPARAM lparam)
             strcmp(class_name, "Afx:400000:3") == 0 ||
             strcmp(class_name, "MCIWndClass") == 0)
         {
+            g_ddraw->video_window_exists = TRUE;
+
             LONG style = real_GetWindowLongA(hwnd, GWL_EXSTYLE);
 
             if (!(style & WS_EX_TRANSPARENT))

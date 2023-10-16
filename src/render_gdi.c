@@ -83,7 +83,7 @@ DWORD WINAPI gdi_render_main(void)
 
             if (g_config.fixchilds)
             {
-                g_ddraw->child_window_exists = FALSE;
+                g_ddraw->child_window_exists = g_ddraw->video_window_exists = FALSE;
                 EnumChildWindows(g_ddraw->hwnd, util_enum_child_proc, (LPARAM)g_ddraw->primary);
             }
 
