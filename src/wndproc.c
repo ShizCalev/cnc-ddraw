@@ -729,10 +729,11 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
         }
 
-        if (g_ddraw->video_window_exists)
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        if (video_hwnd)
         {
-            if (wParam != VK_ESCAPE)
-                return 0;
+            PostMessageA(video_hwnd, uMsg, wParam, lParam);
+            return 0;
         }
 
         break;
@@ -742,10 +743,11 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         if (g_config.hotkeys.screenshot && wParam == g_config.hotkeys.screenshot)
             ss_take_screenshot(g_ddraw->primary);
 
-        if (g_ddraw->video_window_exists)
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        if (video_hwnd)
         {
-            if (wParam != VK_ESCAPE)
-                return 0;
+            PostMessageA(video_hwnd, uMsg, wParam, lParam);
+            return 0;
         }
 
         break;
@@ -796,8 +798,10 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_MBUTTONDOWN:
     case WM_MOUSEMOVE:
     {
-        if (g_ddraw->video_window_exists)
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        if (video_hwnd)
         {
+            PostMessageA(video_hwnd, uMsg, wParam, lParam);
             return 0;
         }
 
