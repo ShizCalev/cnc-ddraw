@@ -798,13 +798,6 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     case WM_MBUTTONDOWN:
     case WM_MOUSEMOVE:
     {
-        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
-        if (video_hwnd)
-        {
-            PostMessageA(video_hwnd, uMsg, wParam, lParam);
-            return 0;
-        }
-
         if (!g_config.devmode && !g_mouse_locked)
         {
             return 0;
@@ -837,6 +830,13 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         InterlockedExchange((LONG*)&g_ddraw->cursor.y, y);
 
         lParam = MAKELPARAM(x, y);
+
+        HWND video_hwnd = (HWND)InterlockedExchangeAdd((LONG*)&g_ddraw->video_window_hwnd, 0);
+        if (video_hwnd)
+        {
+            PostMessageA(video_hwnd, uMsg, wParam, lParam);
+            return 0;
+        }
 
         break;
     }
