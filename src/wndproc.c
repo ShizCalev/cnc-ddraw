@@ -709,12 +709,6 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     }
     case WM_KEYDOWN:
     {
-        if (g_ddraw->video_window_exists)
-        {
-            if (wParam != VK_ESCAPE)
-                return 0;
-        }
-
         if (g_config.hotkeys.unlock_cursor1 && 
             (wParam == VK_CONTROL || wParam == g_config.hotkeys.unlock_cursor1))
         {
@@ -735,18 +729,24 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             }
         }
 
-        break;
-    }
-    case WM_KEYUP:
-    {
         if (g_ddraw->video_window_exists)
         {
             if (wParam != VK_ESCAPE)
                 return 0;
         }
 
+        break;
+    }
+    case WM_KEYUP:
+    {
         if (g_config.hotkeys.screenshot && wParam == g_config.hotkeys.screenshot)
             ss_take_screenshot(g_ddraw->primary);
+
+        if (g_ddraw->video_window_exists)
+        {
+            if (wParam != VK_ESCAPE)
+                return 0;
+        }
 
         break;
     }
