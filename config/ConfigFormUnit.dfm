@@ -4,8 +4,8 @@ object ConfigForm: TConfigForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'cnc-ddraw config'
-  ClientHeight = 476
-  ClientWidth = 741
+  ClientHeight = 475
+  ClientWidth = 737
   Color = clMenu
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -2681,14 +2681,14 @@ object ConfigForm: TConfigForm
   OnActivate = FormActivate
   OnCreate = FormCreate
   DesignSize = (
-    741
-    476)
+    737
+    475)
   TextHeight = 13
   object DisplayPnl: TPanel
     Left = 233
     Top = 8
-    Width = 499
-    Height = 465
+    Width = 495
+    Height = 464
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
@@ -2697,8 +2697,8 @@ object ConfigForm: TConfigForm
     TabOrder = 1
     StyleElements = [seFont, seBorder]
     DesignSize = (
-      499
-      465)
+      495
+      464)
     object PresentationLbl: TLabel
       Left = 40
       Top = 28
@@ -2776,7 +2776,7 @@ object ConfigForm: TConfigForm
       OnPaint = PboxPaint
     end
     object LanguageImg: TImage
-      Left = 453
+      Left = 449
       Top = 8
       Width = 16
       Height = 11
@@ -2803,6 +2803,7 @@ object ConfigForm: TConfigForm
       Stretch = True
       Visible = False
       OnClick = LanguageImgClick
+      ExplicitLeft = 453
     end
     object ResolutionLbl: TLabel
       Left = 40
@@ -2884,7 +2885,7 @@ object ConfigForm: TConfigForm
       OnClick = DevmodeChkClick
     end
     object ThemePnl: TPanel
-      Left = 475
+      Left = 471
       Top = 8
       Width = 16
       Height = 11
@@ -2895,7 +2896,6 @@ object ConfigForm: TConfigForm
       TabOrder = 5
       StyleElements = [seFont, seBorder]
       OnClick = ThemePnlClick
-      ExplicitLeft = 471
     end
     object ResolutionCbx: TComboBox
       Left = 41
@@ -2926,8 +2926,8 @@ object ConfigForm: TConfigForm
   object CompatibilityPnl: TPanel
     Left = 233
     Top = 8
-    Width = 499
-    Height = 465
+    Width = 495
+    Height = 464
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
@@ -2936,8 +2936,6 @@ object ConfigForm: TConfigForm
     TabOrder = 3
     Visible = False
     StyleElements = [seFont, seBorder]
-    ExplicitWidth = 495
-    ExplicitHeight = 464
     object MaxgameticksLbl: TLabel
       Left = 40
       Top = 28
@@ -3108,8 +3106,8 @@ object ConfigForm: TConfigForm
   object AdvancedPnl: TPanel
     Left = 233
     Top = 8
-    Width = 499
-    Height = 465
+    Width = 495
+    Height = 464
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
@@ -3118,8 +3116,6 @@ object ConfigForm: TConfigForm
     TabOrder = 2
     Visible = False
     StyleElements = [seFont, seBorder]
-    ExplicitWidth = 495
-    ExplicitHeight = 464
     object RendererLbl: TLabel
       Left = 40
       Top = 28
@@ -3324,8 +3320,8 @@ object ConfigForm: TConfigForm
   object HotkeyPnl: TPanel
     Left = 233
     Top = 8
-    Width = 499
-    Height = 465
+    Width = 495
+    Height = 464
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelOuter = bvNone
     Color = clWhite
@@ -3334,8 +3330,6 @@ object ConfigForm: TConfigForm
     TabOrder = 4
     Visible = False
     StyleElements = [seFont, seBorder]
-    ExplicitWidth = 495
-    ExplicitHeight = 464
     object ToggleWindowedLbl: TLabel
       Left = 40
       Top = 27
@@ -3557,16 +3551,15 @@ object ConfigForm: TConfigForm
     Left = 0
     Top = 8
     Width = 233
-    Height = 468
+    Height = 467
     Anchors = [akLeft, akTop, akBottom]
     BevelOuter = bvNone
     Color = clMenu
     ParentBackground = False
     TabOrder = 0
-    ExplicitHeight = 467
     DesignSize = (
       233
-      468)
+      467)
     object DisplayBtn: TSpeedButton
       Left = 0
       Top = 8
@@ -3633,7 +3626,7 @@ object ConfigForm: TConfigForm
     end
     object RestoreDefaultsBtn: TSpeedButton
       Left = 0
-      Top = 440
+      Top = 439
       Width = 227
       Height = 22
       Anchors = [akLeft, akRight, akBottom]
@@ -3646,6 +3639,7 @@ object ConfigForm: TConfigForm
       Font.Style = []
       ParentFont = False
       OnClick = RestoreDefaultsBtnClick
+      ExplicitTop = 440
     end
   end
 end

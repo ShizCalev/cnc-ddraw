@@ -702,7 +702,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 	}
 
 	auto *ini = new TIniFile(".\\dd-hd.ini");
-	auto *hd_ini = new TIniFile(".\\Warcraft_II_HD.ini");
+	auto *hd_ini = new TIniFile(".\\Warcraft II BNE.ini");
 
 	if (ini->ReadString("ddraw", "configtheme", "Windows10") == "Cobalt XEMedia") {
 
@@ -736,9 +736,9 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 		PresentationCbx->ItemIndex = 0;
 	}
 
-	int cwidth = hd_ini->ReadInteger("Warcraft_II_HD", "Width", 0);
-	int cheight = hd_ini->ReadInteger("Warcraft_II_HD", "Height", 0);
-	int reso = hd_ini->ReadInteger("Warcraft_II_HD", "Resolution", 3);
+	int cwidth = hd_ini->ReadInteger("Game", "Width", 0);
+	int cheight = hd_ini->ReadInteger("Game", "Height", 0);
+	int reso = hd_ini->ReadInteger("Game", "Resolution", 3);
 
 	if (!cwidth || !cheight) {
 		ResolutionCbx->ItemIndex = reso <= 5 ? reso : 3; 	
@@ -921,7 +921,7 @@ void TConfigForm::SaveSettings()
 		return;
 
 	auto *ini = new TIniFile(".\\dd-hd.ini");
-	auto *hd_ini = new TIniFile(".\\Warcraft_II_HD.ini");
+	auto *hd_ini = new TIniFile(".\\Warcraft II BNE.ini");
 
 	/* Display Settings */
 
@@ -949,11 +949,10 @@ void TConfigForm::SaveSettings()
 	}
 
 	if (ResolutionCbx->ItemIndex <= 5) {
-		hd_ini->WriteInteger(
-			"Warcraft_II_HD", "Resolution", ResolutionCbx->ItemIndex);
+		hd_ini->WriteInteger("Game", "Resolution", ResolutionCbx->ItemIndex);
 
-		hd_ini->WriteInteger("Warcraft_II_HD", "Width", 0);	
-		hd_ini->WriteInteger("Warcraft_II_HD", "Height", 0);
+		hd_ini->WriteInteger("Game", "Width", 0);
+		hd_ini->WriteInteger("Game", "Height", 0);
 
 		if (ResolutionCbx->Items->Count == 7) {
 			ResolutionCbx->Items->Delete(6);
