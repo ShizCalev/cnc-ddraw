@@ -685,6 +685,14 @@ static void cfg_create_ini()
             "maintas=false\n"
             "boxing=false\n"
             "\n"
+            "; Diablo\n"
+            "[Diablo]\n"
+            "devmode=true\n"
+            "\n"
+            "; Diablo: Hellfire\n"
+            "[hellfire]\n"
+            "devmode=true\n"
+            "\n"
             "; Eggsucker\n"
             "[eggsucker]\n"
             "fixpitch=true\n"
@@ -1003,7 +1011,7 @@ static void cfg_init()
     }
 
     /* set up settings ini */
-    strncpy(g_config.ini_path, ".\\dd-hd.ini", sizeof(g_config.ini_path) - 1);
+    strncpy(g_config.ini_path, ".\\ddraw.ini", sizeof(g_config.ini_path) - 1);
 
     if (GetFileAttributes(g_config.ini_path) == INVALID_FILE_ATTRIBUTES)
         cfg_create_ini();

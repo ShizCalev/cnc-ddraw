@@ -31,7 +31,7 @@ int WINAPI _tWinMain(HINSTANCE, HINSTANCE, LPTSTR, int)
 			return 0;
 		}
 
-		auto *ini = new TIniFile(".\\dd-hd.ini");
+		auto *ini = new TIniFile(".\\ddraw.ini");
 		auto theme = ini->ReadString("ddraw", "configtheme", "Windows10");
 
 		TStyleManager::TrySetStyle(

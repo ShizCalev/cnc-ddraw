@@ -40,7 +40,7 @@ void __fastcall TConfigForm::CreateParams(TCreateParams & Params)
 
 void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 {
-	auto *ini = new TIniFile(".\\dd-hd.ini");
+	auto *ini = new TIniFile(".\\ddraw.ini");
 	ini->WriteString("ddraw", "configlang", IsEnglish ? "auto" : "english");
 	delete ini;
 
@@ -57,7 +57,7 @@ void __fastcall TConfigForm::LanguageImgClick(TObject *Sender)
 
 void __fastcall TConfigForm::ThemePnlClick(TObject *Sender)
 {
-	auto *ini = new TIniFile(".\\dd-hd.ini");
+	auto *ini = new TIniFile(".\\ddraw.ini");
 	auto theme =
 		ThemePnl->Color == (TColor)RGB(31, 31, 31) ? "Cobalt XEMedia" : "Windows10";
 
@@ -86,7 +86,7 @@ void __fastcall TConfigForm::RestoreDefaultsBtnClick(TObject *Sender)
 		return;
 	}
 
-	DeleteFile(".\\dd-hd.ini");
+	DeleteFile(".\\ddraw.ini");
 
 	ShellExecute(
 		NULL,
@@ -676,8 +676,8 @@ void __fastcall TConfigForm::CompatibilityBtnClick(TObject *Sender)
 
 void __fastcall TConfigForm::FormCreate(TObject *Sender)
 {
-	/* Let cnc-ddraw create a new dd-hd.ini if it doesn't exist */
-	if (FileExists(".\\ddraw.dll") && !FileExists(".\\dd-hd.ini")) {
+	/* Let cnc-ddraw create a new ddraw.ini if it doesn't exist */
+	if (FileExists(".\\ddraw.dll") && !FileExists(".\\ddraw.ini")) {
 
 		SetEnvironmentVariableW(L"cnc_ddraw_config_init", L"1");
 
@@ -701,7 +701,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 		}
 	}
 
-	auto *ini = new TIniFile(".\\dd-hd.ini");
+	auto *ini = new TIniFile(".\\ddraw.ini");
 	auto *hd_ini = new TIniFile(".\\Warcraft II BNE.ini");
 
 	if (ini->ReadString("ddraw", "configtheme", "Windows10") == "Cobalt XEMedia") {
@@ -906,7 +906,7 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 	RestoreDefaultsBtn->Visible =
 		FileExists(".\\ddraw.dll") &&
-		FileExists(".\\dd-hd.ini") &&
+		FileExists(".\\ddraw.ini") &&
 		GetBool(ini, "allow_reset", true);
 
 	delete ini;
@@ -920,7 +920,7 @@ void TConfigForm::SaveSettings()
 	if (!Initialized)
 		return;
 
-	auto *ini = new TIniFile(".\\dd-hd.ini");
+	auto *ini = new TIniFile(".\\ddraw.ini");
 	auto *hd_ini = new TIniFile(".\\Warcraft II BNE.ini");
 
 	/* Display Settings */
