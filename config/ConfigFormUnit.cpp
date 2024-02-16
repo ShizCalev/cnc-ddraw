@@ -738,10 +738,10 @@ void __fastcall TConfigForm::FormCreate(TObject *Sender)
 
 	int cwidth = hd_ini->ReadInteger("Game", "Width", 0);
 	int cheight = hd_ini->ReadInteger("Game", "Height", 0);
-	int reso = hd_ini->ReadInteger("Game", "Resolution", 3);
+	int reso = hd_ini->ReadInteger("Game", "Resolution", 4);
 
 	if (!cwidth || !cheight) {
-		ResolutionCbx->ItemIndex = reso <= 7 ? reso : 3;
+		ResolutionCbx->ItemIndex = reso <= 10 ? reso : 4;
 	}
 	else {
 		ResolutionCbx->AddItem(IntToStr(cwidth) + "x" + IntToStr(cheight), NULL);
@@ -948,14 +948,14 @@ void TConfigForm::SaveSettings()
 		break;
 	}
 
-	if (ResolutionCbx->ItemIndex <= 7) {
+	if (ResolutionCbx->ItemIndex <= 10) {
 		hd_ini->WriteInteger("Game", "Resolution", ResolutionCbx->ItemIndex);
 
 		hd_ini->WriteInteger("Game", "Width", 0);
 		hd_ini->WriteInteger("Game", "Height", 0);
 
-		if (ResolutionCbx->Items->Count == 9) {
-			ResolutionCbx->Items->Delete(8);
+		if (ResolutionCbx->Items->Count == 12) {
+			ResolutionCbx->Items->Delete(11);
 		}			
 	}
 
