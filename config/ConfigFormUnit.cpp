@@ -86,6 +86,14 @@ void __fastcall TConfigForm::RestoreDefaultsBtnClick(TObject *Sender)
 		return;
 	}
 
+	auto *ini = new TIniFile(".\\Warcraft II BNE.ini");
+
+	ini->WriteString("Game", "Resolution", "4");
+	ini->WriteString("Game", "Width", "0");
+	ini->WriteString("Game", "Height", "0");
+
+	delete ini;
+
 	DeleteFile(".\\ddraw.ini");
 
 	ShellExecute(
