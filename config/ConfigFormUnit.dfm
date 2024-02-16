@@ -3539,7 +3539,7 @@ object ConfigForm: TConfigForm
       BevelInner = bvNone
       BevelOuter = bvSpace
       Style = csDropDownList
-      DropDownCount = 11
+      DropDownCount = 12
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -3549,17 +3549,17 @@ object ConfigForm: TConfigForm
       TabOrder = 6
       OnChange = PresentationCbxChange
       Items.Strings = (
-        '640x480   (4:3)'
-        '800x608   (4:3)'
-        '1024x768 (4:3)'
-        '832x480   (16:9)'
-        '960x544   (16:9)'
-        '1280x704 (16:9)'
-        '1120x480 (21:9)'
-        '1280x544 (21:9)'
-        '768x480   (16:10)'
-        '960x608   (16:10)'
-        '1280x800 (16:10)')
+        '640x480    (4:3)'
+        '800x608    (4:3)'
+        '1024x768  (4:3)'
+        '832x480    (16:9)'
+        '960x544    (16:9)'
+        '1280x704  (16:9)'
+        '1120x480  (21:9)'
+        '1280x544  (21:9)'
+        '768x480    (16:10)'
+        '960x608    (16:10)'
+        '1280x800  (16:10)')
     end
   end
   object MenuPnl: TPanel
