@@ -3539,7 +3539,7 @@ object ConfigForm: TConfigForm
       BevelInner = bvNone
       BevelOuter = bvSpace
       Style = csDropDownList
-      DropDownCount = 12
+      DropDownCount = 13
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -3554,6 +3554,7 @@ object ConfigForm: TConfigForm
         '1024x768  (4:3)'
         '832x480    (16:9)'
         '960x544    (16:9)'
+        '1024x576  (16:9)'
         '1280x704  (16:9)'
         '1120x480  (21:9)'
         '1280x544  (21:9)'
