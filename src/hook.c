@@ -479,6 +479,7 @@ void hook_create(HOOKLIST* hooks, BOOL initial_hook)
                     BOOL is_local = _strnicmp(game_dir, mod_dir, strlen(game_dir)) == 0;
 
                     if (is_local ||
+                        _strcmpi(mod_filename, "mciavi32") == 0 ||
                         _strcmpi(mod_filename, "MSVFW32") == 0 ||
                         _strcmpi(mod_filename, "quartz") == 0 ||
                         _strcmpi(mod_filename, "winmm") == 0)
@@ -555,6 +556,7 @@ void hook_revert(HOOKLIST* hooks)
                     BOOL is_local = _strnicmp(game_dir, mod_dir, strlen(game_dir)) == 0;
 
                     if (is_local ||
+                        _strcmpi(mod_filename, "mciavi32") == 0 ||
                         _strcmpi(mod_filename, "MSVFW32") == 0 ||
                         _strcmpi(mod_filename, "quartz") == 0 ||
                         _strcmpi(mod_filename, "winmm") == 0)
