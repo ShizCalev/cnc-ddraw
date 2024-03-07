@@ -132,7 +132,7 @@ BOOL ss_take_screenshot(IDirectDrawSurfaceImpl* src)
         }
     }
 
-    strftime(str_time, sizeof(str_time), "%Y-%m-%d-%H_%M_%S", localtime(&t));
+    strftime(str_time, sizeof(str_time), "%Y-%m-%d_%H-%M-%S", localtime(&t));
     _snprintf(filename, sizeof(filename), "%s-%s.png", title, str_time);
 
     if (src->bpp == 8 && src->palette)
