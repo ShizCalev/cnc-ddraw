@@ -931,15 +931,17 @@ HRESULT dd_SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwFl
 
         AdjustWindowRectEx(&dst, style, GetMenu(g_ddraw->hwnd) != NULL, exstyle);
 
-        real_SetWindowPos(
-            g_ddraw->hwnd, 
-            HWND_NOTOPMOST, 
-            dst.left, 
-            dst.top, 
-            (dst.right - dst.left), 
-            (dst.bottom - dst.top), 
-            SWP_SHOWWINDOW | SWP_FRAMECHANGED);
-
+        if (!(dwFlags & 8))
+        {
+            real_SetWindowPos(
+                g_ddraw->hwnd,
+                HWND_NOTOPMOST,
+                dst.left,
+                dst.top,
+                (dst.right - dst.left),
+                (dst.bottom - dst.top),
+                SWP_SHOWWINDOW | SWP_FRAMECHANGED);
+        }
 
         BOOL d3d9_active = FALSE;
 
@@ -1103,7 +1105,12 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
 
     if (hwnd == NULL)
     {
-        return DD_OK;
+        if (dwFlags & DDSCL_NORMAL)
+        {
+            hwnd = *(HWND*)0x46B4D8;
+        }
+        else
+            return DD_OK;
     }
 
     if (g_ddraw->hwnd == NULL)
@@ -1214,6 +1221,13 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
         if (g_config.vermeer_hack)
         {
             dd_SetDisplayMode(640, 480, 16, 0);
+        }
+        else
+        {
+            g_config.devmode = TRUE;
+            g_config.fullscreen = FALSE;
+            g_config.windowed = TRUE;
+            dd_SetDisplayMode(513, 319, 32, 8);
         }
     }
 
