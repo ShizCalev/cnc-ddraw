@@ -1227,7 +1227,7 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
             g_config.devmode = TRUE;
             g_config.fullscreen = FALSE;
             g_config.windowed = TRUE;
-            dd_SetDisplayMode(523, 377, 32, 8);
+            dd_SetDisplayMode(513, 319, 32, 8);
         }
     }
 
