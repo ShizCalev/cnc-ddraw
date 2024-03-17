@@ -446,6 +446,14 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
         }
 
+        static BOOL initialized = FALSE;
+
+        if (!initialized && LOWORD(lParam) == 503 && HIWORD(lParam) == 309)
+        {
+            initialized = TRUE;
+            dd_SetDisplayMode(513, 319, 32, 0);
+        }
+
         return DefWindowProc(hWnd, uMsg, wParam, lParam); /* Carmageddon fix */
     }
     case WM_MOVE:
