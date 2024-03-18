@@ -14,6 +14,7 @@
 #include "debug.h"
 #include "utils.h"
 #include "blt.h"
+#include "dllmain.h"
 
 
 CNCDDRAW* g_ddraw = NULL;
@@ -1224,6 +1225,7 @@ HRESULT dd_SetCooperativeLevel(HWND hwnd, DWORD dwFlags)
         }
         else
         {
+            GameHandlesClose = TRUE;
             g_config.devmode = TRUE;
             g_config.fullscreen = FALSE;
             g_config.windowed = TRUE;
