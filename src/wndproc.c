@@ -448,7 +448,7 @@ LRESULT CALLBACK fake_WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
         static BOOL initialized = FALSE;
 
-        if (!initialized && (LOWORD(lParam) >= 460 && LOWORD(lParam) <= 540))
+        if (!initialized && (LOWORD(lParam) >= 460 && LOWORD(lParam) <= 540) && HIWORD(lParam) < 350 && GetMenu(g_ddraw->hwnd))
         {
             initialized = TRUE;
             dd_SetDisplayMode(513, 319, 32, 0);
